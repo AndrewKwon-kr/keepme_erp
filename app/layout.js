@@ -1,5 +1,6 @@
 import './globals.css';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import HomeIcon from '@mui/icons-material/Home';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
@@ -20,6 +21,10 @@ import Button from '@mui/material/Button';
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
+import moment from 'moment';
+import 'moment/locale/ko';
+import { useInterval } from 'react-use';
 
 const menus = [
   { path: '/home', name: '홈', icon: 'home' },
@@ -47,6 +52,15 @@ export default function RootLayout({ children }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  const [realTime, setRealTime] = useState(
+    moment().format('YYYY년 MM월 DD일(dd) hh:mm:ss')
+  );
+  // useInterval
+  useInterval(() => {
+    setRealTime(moment().format('YYYY년 MM월 DD일(dd) hh:mm:ss'));
+  }, 1000);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -57,10 +71,6 @@ export default function RootLayout({ children }) {
   const handleChange = (event) => {
     setAge(event.target.value);
   };
-
-  useEffect(() => {
-    console.log(router.pathname);
-  }, [router]);
 
   const setIcon = (icon) => {
     switch (icon) {
@@ -87,6 +97,9 @@ export default function RootLayout({ children }) {
   };
   return (
     <div className="w-screen flex">
+      <Head>
+        <title>KeepMe_ERP</title>
+      </Head>
       <div className="pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5">
         {menus.map((menu) => (
           <Link href={menu.path} key={menu.name}>
@@ -106,7 +119,7 @@ export default function RootLayout({ children }) {
       </div>
       <div className="min-w-[calc(100%_-_250px)] max-w-[1380px] flex flex-col">
         <div className="flex flex-col px-5">
-          <div className="flex mt-5 ml-auto mr-5 gap-x-5">
+          <div className="flex items-center mt-5 ml-auto mr-5 gap-x-5">
             <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
               <SearchIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
               <input
@@ -156,7 +169,7 @@ export default function RootLayout({ children }) {
             </div>
           </div>
           <div className="mt-11 flex items-center">
-            <div className="text-xl font-semibold">2023년 1월 23일 (월)</div>
+            <div className="text-xl font-semibold">{realTime}</div>
             <div className="ml-auto text-base">
               전체 등록 인원 : <b>1240</b>
             </div>
