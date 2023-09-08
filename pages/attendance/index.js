@@ -1,9 +1,18 @@
 import RootLayout from '@/app/layout';
 import React, { useEffect, useMemo, useState } from 'react';
 import { MaterialReactTable } from 'material-react-table';
-import { generateCsv, download } from 'export-to-csv'; //or use your library of choice here
-import { CSVLink, CSVDownload } from 'react-csv';
+import { CSVLink } from 'react-csv';
 import { Box, Button } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
+import dayjs from 'dayjs';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 const datas = [
@@ -240,6 +249,9 @@ const datas = [
 export default function Attendance() {
   const [rowSelection, setRowSelection] = useState({});
   const [headers, setHeaders] = useState([]);
+  const [belong, setBelong] = useState(1);
+  const [startDate, setStartDate] = useState(dayjs());
+  const [endtDate, setEndDate] = useState(dayjs());
   const columns = useMemo(() => [
     { accessorKey: 'id', header: 'ID', size: 40 },
     { accessorKey: 'date', header: '일시', size: 120 },
@@ -265,87 +277,139 @@ export default function Attendance() {
       }))
     );
   }, []);
-  console.log(headers);
 
-  const csvOptions = {
-    filename: '240907 부산 가야현장',
-    useKeysAsHeaders: true,
-    columnHeaders: columns.map((c) => c.header),
-  };
-
-  const csvExporter = generateCsv(csvOptions);
   useEffect(() => {
     //do something when the row selection changes...
     console.info({ rowSelection });
   }, [rowSelection]);
 
-  const handleExportRows = (rows) => {
-    // download(csvOptions)(csvExporter(rows.map((row) => row.original)));
-  };
-
-  const handleExportData = () => {
-    // console.log(csvExporter(datas));
-    // download(csvOptions)(csvExporter(datas));
+  const handleChangeBelong = (event) => {
+    setBelong(event.target.value);
   };
 
   return (
     <RootLayout>
       <main className="w-full">
-        <div className="">
-          <MaterialReactTable
-            columns={columns}
-            data={datas}
-            enableRowSelection
-            enableStickyHeader
-            enableStickyFooter
-            muiTableContainerProps={{
-              sx: {
-                maxHeight: 700,
-                width: '100%',
-                maxWidth: '100%',
-                overflow: 'scroll',
-                overflowX: 'scroll',
-              },
-            }}
-            getRowId={(row) => row.id} //give each row a more useful id
-            onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-            state={{ rowSelection }} //pass our managed row selection state to the table to use
-            muiTableHeadCellProps={{
-              sx: {
-                backgroundColor: '#F2F3F6',
-                BorderStyle: 'solid',
-                borderWidth: '1px 0px 1px 0px',
-                borderColor: 'black black black black',
-              },
-            }}
-            renderTopToolbarCustomActions={({ table }) => (
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '1rem',
-                  p: '0.5rem',
-                  flexWrap: 'wrap',
-                }}
+        <div className="flex items-center gap-x-10">
+          <div className="text-[#7A7F94] text-base flex items-center ">
+            <div className="">소속</div>
+            <FormControl>
+              <Select
+                className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
+                value={belong}
+                onChange={handleChangeBelong}
+                displayEmpty
               >
-                <Button
-                  color="primary"
-                  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                  startIcon={<FileDownloadIcon />}
-                  variant="outlined"
+                <MenuItem value={0}>부산 가야현장</MenuItem>
+                <MenuItem value={1}>부산 다대포현장</MenuItem>
+                <MenuItem value={2}>김해 장유현장</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="text-[#7A7F94] text-base flex items-center">
+            <div className="">부서</div>
+            <FormControl>
+              <Select
+                className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
+                value={belong}
+                onChange={handleChangeBelong}
+                displayEmpty
+              >
+                <MenuItem value={0}>골조</MenuItem>
+                <MenuItem value={1}>콘크리트</MenuItem>
+                <MenuItem value={2}>크레인</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="text-[#7A7F94] text-base flex items-center">
+            <div className="">이름</div>
+            <FormControl>
+              <Select
+                className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
+                value={belong}
+                onChange={handleChangeBelong}
+                displayEmpty
+              >
+                <MenuItem value={0}>부산 가야현장</MenuItem>
+                <MenuItem value={1}>부산 다대포현장</MenuItem>
+                <MenuItem value={2}>김해 장유현장</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+        <div className="my-5 flex items-center">
+          <div className="text-[#7A7F94] text-base flex items-center">
+            <div className="mr-5">조회기간</div>
+            <div className="flex items-center">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={startDate}
+                  onChange={(newValue) => setStartDate(newValue)}
+                />
+                &nbsp; ~ &nbsp;
+                <DatePicker
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={endtDate}
+                  onChange={(newValue) => setEndDate(newValue)}
+                />
+              </LocalizationProvider>
+            </div>
+          </div>
+        </div>
+        <MaterialReactTable
+          columns={columns}
+          data={datas}
+          enableRowSelection
+          enableStickyHeader
+          enableStickyFooter
+          muiTableContainerProps={{
+            sx: {
+              display: 'block',
+              maxHeight: 700,
+              width: '100%',
+              maxWidth: '100%',
+              overflowX: 'auto',
+            },
+          }}
+          getRowId={(row) => row.id} //give each row a more useful id
+          onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+          state={{ rowSelection }} //pass our managed row selection state to the table to use
+          muiTableHeadCellProps={{
+            sx: {
+              backgroundColor: '#F2F3F6',
+              BorderStyle: 'solid',
+              borderWidth: '1px 0px 1px 0px',
+              borderColor: 'black black black black',
+            },
+          }}
+          renderTopToolbarCustomActions={({ table }) => (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '1rem',
+                p: '0.5rem',
+                flexWrap: 'wrap',
+              }}
+            >
+              <Button
+                color="primary"
+                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                startIcon={<FileDownloadIcon />}
+                variant="outlined"
+              >
+                <CSVLink
+                  asyncOnClick={true}
+                  data={datas}
+                  headers={headers}
+                  filename={'20240907_근태.csv'}
                 >
-                  <CSVLink
-                    asyncOnClick={true}
-                    data={datas}
-                    headers={headers}
-                    filename={'20240907_근태.csv'}
-                  >
-                    모든 데이터 엑셀다운
-                  </CSVLink>
-                </Button>
-                <Button
+                  엑셀 다운로드
+                </CSVLink>
+              </Button>
+              {/* <Button
                   disabled={table.getRowModel().rows.length === 0}
                   //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                  onClick={() => handleExportRows(table.getRowModel().rows)}
                   startIcon={<FileDownloadIcon />}
                   variant="outlined"
                 >
@@ -356,33 +420,28 @@ export default function Attendance() {
                   >
                     현재 페이지 엑셀다운
                   </CSVLink>
-                </Button>
-                <Button
-                  disabled={
-                    !table.getIsSomeRowsSelected() &&
-                    !table.getIsAllRowsSelected()
-                  }
-                  //only export selected rows
-                  onClick={() =>
-                    handleExportRows(table.getSelectedRowModel().rows)
-                  }
-                  startIcon={<FileDownloadIcon />}
-                  variant="outlined"
+                </Button> */}
+              <Button
+                disabled={
+                  !table.getIsSomeRowsSelected() &&
+                  !table.getIsAllRowsSelected()
+                }
+                startIcon={<FileDownloadIcon />}
+                variant="outlined"
+              >
+                <CSVLink
+                  data={table
+                    .getSelectedRowModel()
+                    .rows.map((row) => row.original)}
+                  headers={headers}
+                  filename={'20240907_선택된_근로자_근태.csv'}
                 >
-                  <CSVLink
-                    data={table
-                      .getSelectedRowModel()
-                      .rows.map((row) => row.original)}
-                    headers={headers}
-                    filename={'20240907_선택된_근로자_근태.csv'}
-                  >
-                    선택된 열 엑셀다운
-                  </CSVLink>
-                </Button>
-              </Box>
-            )}
-          />
-        </div>
+                  선택된 열 엑셀다운
+                </CSVLink>
+              </Button>
+            </Box>
+          )}
+        />
       </main>
     </RootLayout>
   );

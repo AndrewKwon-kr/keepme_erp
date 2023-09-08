@@ -54,11 +54,11 @@ export default function RootLayout({ children }) {
   const open = Boolean(anchorEl);
 
   const [realTime, setRealTime] = useState(
-    moment().format('YYYY년 MM월 DD일(dd) hh:mm:ss')
+    moment().format('YYYY년 MM월 DD일(dd)')
   );
   // useInterval
   useInterval(() => {
-    setRealTime(moment().format('YYYY년 MM월 DD일(dd) hh:mm:ss'));
+    setRealTime(moment().format('YYYY년 MM월 DD일(dd)'));
   }, 1000);
 
   const handleClick = (event) => {
