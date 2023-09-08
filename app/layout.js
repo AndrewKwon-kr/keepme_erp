@@ -1,6 +1,7 @@
 import './globals.css';
 import Link from 'next/link';
 import Head from 'next/head';
+import { atom, useAtom } from 'jotai';
 
 import HomeIcon from '@mui/icons-material/Home';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
@@ -45,10 +46,12 @@ const menus = [
   { path: '/setting', name: '설정', icon: 'setting' },
 ];
 
+const areaAtom = atom(0);
+
 export default function RootLayout({ children }) {
   const router = useRouter();
   const [search, setSearch] = useState('');
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useAtom(areaAtom);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
