@@ -1,3 +1,4 @@
+'use client'; // this is a client component 👈🏽
 import './globals.css';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -20,7 +21,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import moment from 'moment';

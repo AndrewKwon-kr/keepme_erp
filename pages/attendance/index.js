@@ -9,22 +9,24 @@ import MenuItem from '@mui/material/MenuItem';
 
 import dayjs from 'dayjs';
 // import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useAtomValue } from 'jotai';
 import { areaAtom } from '@/app/layout';
+import moment from 'moment';
 
 export default function Attendance() {
   const [rowSelection, setRowSelection] = useState({});
   const [headers, setHeaders] = useState([]);
   const [belong, setBelong] = useState(1);
-  const [startDate, setStartDate] = useState(dayjs());
-  const [endtDate, setEndDate] = useState(dayjs());
+  const [startDate, setStartDate] = useState(moment());
+  const [endDate, setEndDate] = useState(moment());
   const [datas, setDatas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredData, setFilteredData] = useState([]);
   const areaValue = useAtomValue(areaAtom);
 
   const columns = useMemo(() => [
@@ -60,6 +62,18 @@ export default function Attendance() {
     //do something when the row selection changes...
     console.info({ rowSelection });
   }, [rowSelection]);
+  useEffect(() => {
+    const start = startDate.startOf('day');
+    const end = endDate.endOf('day');
+
+    setFilteredData(
+      datas.filter(
+        (data) =>
+          moment(data.date).isSameOrAfter(start) &&
+          moment(data.date).isSameOrBefore(end)
+      )
+    );
+  }, [startDate, endDate]);
 
   useEffect(() => {
     getTableData();
@@ -73,51 +87,26 @@ export default function Attendance() {
     setIsLoading(true);
 
     let array = [];
+    let now = moment();
+
     for (let i = 0; i < 40; i++) {
-      if (i > 10) {
-        array.push({
-          id: i,
-          date: '2022-05-08',
-          belong: '강남건설',
-          department: '골조',
-          position: '사원',
-          name: '강민수' + i,
-          phoneNumber: '010-1234-5678',
-          registrationNumber: '780102-1122338',
-          startedAt: '08:00',
-          endedAt: '17:00',
-        });
-      } else if (i > 20) {
-        array.push({
-          id: i,
-          date: '2022-05-08',
-          belong: '강남건설',
-          department: '골조',
-          position: '주임',
-          name: '강민수' + i,
-          phoneNumber: '010-1234-5678',
-          registrationNumber: '780102-1122338',
-          startedAt: '08:00',
-          endedAt: '17:00',
-        });
-      } else {
-        array.push({
-          id: i,
-          date: '2022-05-08',
-          belong: '강남건설',
-          department: '골조',
-          position: '반장',
-          name: '강민수' + i,
-          phoneNumber: '010-1234-5678',
-          registrationNumber: '780102-1122338',
-          startedAt: '08:00',
-          endedAt: '17:00',
-        });
-      }
+      array[i] = {
+        id: i,
+        date: now.subtract(1, 'day').format('YYYY-MM-DD'),
+        belong: '강남건설',
+        department: '골조',
+        position: i < 10 ? '사원' : i < 20 ? '주임' : i < 30 ? '대리' : '과장',
+        name: '강민수' + i,
+        phoneNumber: '010-1234-5678',
+        registrationNumber: '780102-1122338',
+        startedAt: '08:00',
+        endedAt: '17:00',
+      };
     }
     try {
       setTimeout(() => {
         setDatas(array);
+        setFilteredData(array);
 
         setIsLoading(false);
       }, 2000);
@@ -180,7 +169,7 @@ export default function Attendance() {
           <div className="text-[#7A7F94] text-base flex items-center">
             <div className="mr-5">조회기간</div>
             <div className="flex items-center">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DatePicker
                   slotProps={{ textField: { size: 'small' } }}
                   value={startDate}
@@ -189,7 +178,7 @@ export default function Attendance() {
                 &nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;
                 <DatePicker
                   slotProps={{ textField: { size: 'small' } }}
-                  value={endtDate}
+                  value={endDate}
                   onChange={(newValue) => setEndDate(newValue)}
                 />
               </LocalizationProvider>
@@ -198,7 +187,7 @@ export default function Attendance() {
         </div>
         <MaterialReactTable
           columns={columns}
-          data={datas}
+          data={filteredData}
           enableRowSelection
           enableStickyHeader
           enableStickyFooter
@@ -250,7 +239,7 @@ export default function Attendance() {
           //   </Box>
           // )}
           renderTopToolbarCustomActions={({ table }) =>
-            datas.length > 0 && (
+            filteredData.length > 0 && (
               <Box
                 sx={{
                   display: 'flex',
@@ -267,7 +256,7 @@ export default function Attendance() {
                 >
                   <CSVLink
                     asyncOnClick={true}
-                    data={datas}
+                    data={filteredData}
                     headers={headers}
                     filename={'20240907_근태.csv'}
                   >
