@@ -14,237 +14,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-
-const datas = [
-  {
-    id: 0,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 1,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 2,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 3,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 4,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 5,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 6,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 7,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 8,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 9,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 10,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 11,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 12,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 13,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 14,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 15,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 16,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 17,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-  {
-    id: 18,
-    date: '2022-05-08',
-    belong: '강남건설',
-    department: '골조',
-    position: '반장',
-    name: '강민수',
-    phoneNumber: '010-1234-5678',
-    registrationNumber: '780102-1122338',
-    startedAt: '08:00',
-    endedAt: '17:00',
-  },
-];
+import { useAtomValue } from 'jotai';
+import { areaAtom } from '@/app/layout';
 
 export default function Attendance() {
   const [rowSelection, setRowSelection] = useState({});
@@ -252,6 +23,10 @@ export default function Attendance() {
   const [belong, setBelong] = useState(1);
   const [startDate, setStartDate] = useState(dayjs());
   const [endtDate, setEndDate] = useState(dayjs());
+  const [datas, setDatas] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const areaValue = useAtomValue(areaAtom);
+
   const columns = useMemo(() => [
     { accessorKey: 'id', header: 'ID', size: 40 },
     { accessorKey: 'date', header: '일시', size: 120 },
@@ -279,12 +54,259 @@ export default function Attendance() {
   }, []);
 
   useEffect(() => {
+    console.log(areaValue);
+  }, [areaValue]);
+  useEffect(() => {
     //do something when the row selection changes...
     console.info({ rowSelection });
   }, [rowSelection]);
 
+  useEffect(() => {
+    console.log(areaAtom);
+    getTableData();
+  }, []);
+
   const handleChangeBelong = (event) => {
     setBelong(event.target.value);
+  };
+
+  const getTableData = async () => {
+    try {
+      setTimeout(() => {
+        setDatas([
+          {
+            id: 0,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 1,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 2,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 3,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 4,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 5,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 6,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 7,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 8,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 9,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 10,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 11,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 12,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 13,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 14,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 15,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 16,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 17,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+          {
+            id: 18,
+            date: '2022-05-08',
+            belong: '강남건설',
+            department: '골조',
+            position: '반장',
+            name: '강민수',
+            phoneNumber: '010-1234-5678',
+            registrationNumber: '780102-1122338',
+            startedAt: '08:00',
+            endedAt: '17:00',
+          },
+        ]);
+        setIsLoading(false);
+      }, 2000);
+    } finally {
+    }
   };
 
   return (
@@ -347,7 +369,7 @@ export default function Attendance() {
                   value={startDate}
                   onChange={(newValue) => setStartDate(newValue)}
                 />
-                &nbsp; ~ &nbsp;
+                &nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;
                 <DatePicker
                   slotProps={{ textField: { size: 'small' } }}
                   value={endtDate}
@@ -374,7 +396,7 @@ export default function Attendance() {
           }}
           getRowId={(row) => row.id} //give each row a more useful id
           onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-          state={{ rowSelection }} //pass our managed row selection state to the table to use
+          state={{ rowSelection, isLoading: isLoading }} //pass our managed row selection state to the table to use
           muiTableHeadCellProps={{
             sx: {
               backgroundColor: '#F2F3F6',
@@ -383,7 +405,7 @@ export default function Attendance() {
               borderColor: 'black black black black',
             },
           }}
-          renderTopToolbarCustomActions={({ table }) => (
+          renderTopToolbar={({ table }) => (
             <Box
               sx={{
                 display: 'flex',
@@ -392,55 +414,84 @@ export default function Attendance() {
                 flexWrap: 'wrap',
               }}
             >
-              <Button
-                color="primary"
-                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                startIcon={<FileDownloadIcon />}
-                variant="outlined"
-              >
-                <CSVLink
-                  asyncOnClick={true}
-                  data={datas}
-                  headers={headers}
-                  filename={'20240907_근태.csv'}
-                >
-                  엑셀 다운로드
-                </CSVLink>
-              </Button>
-              {/* <Button
-                  disabled={table.getRowModel().rows.length === 0}
-                  //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+              {datas.length > 0 && (
+                <Button
+                  color="primary"
                   startIcon={<FileDownloadIcon />}
                   variant="outlined"
                 >
                   <CSVLink
-                    data={table.getRowModel().rows.map((row) => row.original)}
+                    asyncOnClick={true}
+                    data={datas}
                     headers={headers}
                     filename={'20240907_근태.csv'}
                   >
-                    현재 페이지 엑셀다운
+                    엑셀 다운로드
                   </CSVLink>
-                </Button> */}
-              <Button
-                disabled={
-                  !table.getIsSomeRowsSelected() &&
-                  !table.getIsAllRowsSelected()
-                }
-                startIcon={<FileDownloadIcon />}
-                variant="outlined"
-              >
-                <CSVLink
-                  data={table
-                    .getSelectedRowModel()
-                    .rows.map((row) => row.original)}
-                  headers={headers}
-                  filename={'20240907_선택된_근로자_근태.csv'}
-                >
-                  선택된 열 엑셀다운
-                </CSVLink>
-              </Button>
+                </Button>
+              )}
             </Box>
           )}
+          // renderTopToolbarCustomActions={({ table }) => (
+          //   <Box
+          //     sx={{
+          //       display: 'flex',
+          //       gap: '1rem',
+          //       p: '0.5rem',
+          //       flexWrap: 'wrap',
+          //     }}
+          //   >
+          //     {datas.length > 0 && (
+          //       <Button
+          //         color="primary"
+          //         //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+          //         startIcon={<FileDownloadIcon />}
+          //         variant="outlined"
+          //       >
+          //         <CSVLink
+          //           asyncOnClick={true}
+          //           data={datas}
+          //           headers={headers}
+          //           filename={'20240907_근태.csv'}
+          //         >
+          //           엑셀 다운로드
+          //         </CSVLink>
+          //       </Button>
+          //     )}
+          //     <Button
+          //         disabled={table.getRowModel().rows.length === 0}
+          //         //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+          //         startIcon={<FileDownloadIcon />}
+          //         variant="outlined"
+          //       >
+          //         <CSVLink
+          //           data={table.getRowModel().rows.map((row) => row.original)}
+          //           headers={headers}
+          //           filename={'20240907_근태.csv'}
+          //         >
+          //           현재 페이지 엑셀다운
+          //         </CSVLink>
+          //       </Button>
+          //     <Button
+          //       disabled={
+          //         !table.getIsSomeRowsSelected() &&
+          //         !table.getIsAllRowsSelected()
+          //       }
+          //       startIcon={<FileDownloadIcon />}
+          //       variant="outlined"
+          //     >
+          //       <CSVLink
+          //         data={table
+          //           .getSelectedRowModel()
+          //           .rows.map((row) => row.original)}
+          //         headers={headers}
+          //         filename={'20240907_선택된_근로자_근태.csv'}
+          //       >
+          //         선택된 열 엑셀다운
+          //       </CSVLink>
+          //     </Button>
+          //   </Box>
+          // )}
         />
       </main>
     </RootLayout>

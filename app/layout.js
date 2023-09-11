@@ -46,12 +46,12 @@ const menus = [
   { path: '/setting', name: '설정', icon: 'setting' },
 ];
 
-const areaAtom = atom(0);
+export const areaAtom = atom(0);
 
 export default function RootLayout({ children }) {
   const router = useRouter();
   const [search, setSearch] = useState('');
-  const [age, setAge] = useAtom(areaAtom);
+  const [area, setArea] = useAtom(areaAtom);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -72,7 +72,7 @@ export default function RootLayout({ children }) {
   };
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setArea(event.target.value);
   };
 
   const setIcon = (icon) => {
@@ -179,7 +179,7 @@ export default function RootLayout({ children }) {
             <FormControl>
               <Select
                 className="ml-5 h-9 w-[180px] active:outline-none"
-                value={age}
+                value={area}
                 onChange={handleChange}
                 displayEmpty
               >
