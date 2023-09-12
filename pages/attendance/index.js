@@ -6,9 +6,8 @@ import { Box, Button } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
 
-import dayjs from 'dayjs';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -22,11 +21,14 @@ export default function Attendance() {
   const [rowSelection, setRowSelection] = useState({});
   const [headers, setHeaders] = useState([]);
   const [belong, setBelong] = useState(1);
+  const [name, setName] = useState('');
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(moment());
   const [datas, setDatas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
+  const [checked, setChecked] = useState(true);
+
   const areaValue = useAtomValue(areaAtom);
 
   const columns = useMemo(() => [
@@ -58,10 +60,37 @@ export default function Attendance() {
   useEffect(() => {
     getTableData();
   }, [areaValue]);
+
   useEffect(() => {
     //do something when the row selection changes...
     console.info({ rowSelection });
   }, [rowSelection]);
+
+  useEffect(() => {
+    console.log('start : ', startDate.format('YYYY-MM-DD'));
+    console.log('end : ', endDate.format('YYYY-MM-DD'));
+    const start = startDate.startOf('day');
+    const end = endDate.endOf('day');
+
+    if (name == '') {
+      setFilteredData(
+        datas.filter(
+          (data) =>
+            moment(data.date).isSameOrAfter(start) &&
+            moment(data.date).isSameOrBefore(end)
+        )
+      );
+    } else {
+      setFilteredData(
+        datas.filter(
+          (data) =>
+            moment(data.date).isSameOrAfter(start) &&
+            moment(data.date).isSameOrBefore(end) &&
+            data.name == name
+        )
+      );
+    }
+  }, [startDate, endDate]);
   useEffect(() => {
     const start = startDate.startOf('day');
     const end = endDate.endOf('day');
@@ -70,10 +99,11 @@ export default function Attendance() {
       datas.filter(
         (data) =>
           moment(data.date).isSameOrAfter(start) &&
-          moment(data.date).isSameOrBefore(end)
+          moment(data.date).isSameOrBefore(end) &&
+          data.name == name
       )
     );
-  }, [startDate, endDate]);
+  }, [name]);
 
   useEffect(() => {
     getTableData();
@@ -81,6 +111,12 @@ export default function Attendance() {
 
   const handleChangeBelong = (event) => {
     setBelong(event.target.value);
+  };
+  const onClickPeriod = (period) => {
+    const start = moment().subtract(period, 'M');
+    const end = moment();
+    setStartDate(start);
+    setEndDate(end);
   };
 
   const getTableData = () => {
@@ -111,7 +147,7 @@ export default function Attendance() {
         setIsLoading(false);
       }, 2000);
     } finally {
-      console.log(array);
+      // console.log(array);
     }
   };
 
@@ -154,13 +190,18 @@ export default function Attendance() {
             <FormControl>
               <Select
                 className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
-                value={belong}
-                onChange={handleChangeBelong}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 displayEmpty
               >
-                <MenuItem value={0}>부산 가야현장</MenuItem>
+                {datas.map((data) => (
+                  <MenuItem key={data.id} value={data.name}>
+                    {data.name}
+                  </MenuItem>
+                ))}
+                {/* <MenuItem value={0}>부산 가야현장</MenuItem>
                 <MenuItem value={1}>부산 다대포현장</MenuItem>
-                <MenuItem value={2}>김해 장유현장</MenuItem>
+                <MenuItem value={2}>김해 장유현장</MenuItem> */}
               </Select>
             </FormControl>
           </div>
@@ -174,20 +215,56 @@ export default function Attendance() {
                   slotProps={{ textField: { size: 'small' } }}
                   value={startDate}
                   onChange={(newValue) => setStartDate(newValue)}
+                  disabled={checked}
                 />
                 &nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;
                 <DatePicker
                   slotProps={{ textField: { size: 'small' } }}
                   value={endDate}
                   onChange={(newValue) => setEndDate(newValue)}
+                  disabled={checked}
                 />
               </LocalizationProvider>
             </div>
           </div>
+          <div className="ml-5 flex items-center gap-x-5">
+            <Button
+              className="bg-[#555555] w-20"
+              variant="contained"
+              onClick={() => onClickPeriod(1)}
+              disabled={checked}
+            >
+              1개월
+            </Button>
+            <Button
+              className="bg-[#555555] w-20"
+              variant="contained"
+              onClick={() => onClickPeriod(3)}
+              disabled={checked}
+            >
+              3개월
+            </Button>
+            <Button
+              className="bg-[#555555] w-20"
+              variant="contained"
+              onClick={() => onClickPeriod(6)}
+              disabled={checked}
+            >
+              6개월
+            </Button>
+          </div>
+          <div className="ml-5 text-[#7A7F94] text-base flex items-center">
+            전체 보기
+            <Switch
+              checked={checked}
+              onChange={() => setChecked(!checked)}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </div>
         </div>
         <MaterialReactTable
           columns={columns}
-          data={filteredData}
+          data={checked ? datas : filteredData}
           enableRowSelection
           enableStickyHeader
           enableStickyFooter
