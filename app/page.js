@@ -190,7 +190,7 @@ export default function Page({ children }) {
             </FormControl>
           </div>
         </div>
-        <div className="p-5">{children}</div>
+        <div className="">{children}</div>
       </div>
     </div>
   );

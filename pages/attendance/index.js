@@ -46,6 +46,11 @@ export default function Attendance() {
     },
     { accessorKey: 'startedAt', header: '출근', size: 60 },
     { accessorKey: 'endedAt', header: '퇴근', size: 60 },
+    { accessorKey: '1', header: '1', size: 60 },
+    { accessorKey: '2', header: '2', size: 60 },
+    { accessorKey: '3', header: '3', size: 60 },
+    { accessorKey: '4', header: '4', size: 60 },
+    { accessorKey: '5', header: '5', size: 60 },
   ]);
 
   useEffect(() => {
@@ -153,7 +158,7 @@ export default function Attendance() {
 
   return (
     <Page>
-      <main className="w-full">
+      <main className="p-5 w-full overflow-x-auto whitespace-nowrap">
         <div className="flex items-center gap-x-10">
           <div className="text-[#7A7F94] text-base flex items-center ">
             <div className="">소속</div>
@@ -262,6 +267,7 @@ export default function Attendance() {
             />
           </div>
         </div>
+        {/* <Box> */}
         <MaterialReactTable
           columns={columns}
           data={checked ? datas : filteredData}
@@ -270,11 +276,10 @@ export default function Attendance() {
           enableStickyFooter
           muiTableContainerProps={{
             sx: {
-              display: 'block',
               maxHeight: 700,
               width: '100%',
               maxWidth: '100%',
-              overflowX: 'auto',
+              overflow: 'auto',
             },
           }}
           getRowId={(row) => row.id} //give each row a more useful id
@@ -376,6 +381,7 @@ export default function Attendance() {
             )
           }
         />
+        {/* </Box> */}
       </main>
     </Page>
   );
