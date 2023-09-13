@@ -1,4 +1,4 @@
-import RootLayout from '@/app/layout';
+import Page from '@/app/page';
 import React, { useEffect, useMemo, useState } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { CSVLink } from 'react-csv';
@@ -14,7 +14,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useAtomValue } from 'jotai';
-import { areaAtom } from '@/app/layout';
+import { areaAtom } from '@/app/page';
 import moment from 'moment';
 
 export default function Attendance() {
@@ -152,7 +152,7 @@ export default function Attendance() {
   };
 
   return (
-    <RootLayout>
+    <Page>
       <main className="w-full">
         <div className="flex items-center gap-x-10">
           <div className="text-[#7A7F94] text-base flex items-center ">
@@ -377,6 +377,6 @@ export default function Attendance() {
           }
         />
       </main>
-    </RootLayout>
+    </Page>
   );
 }

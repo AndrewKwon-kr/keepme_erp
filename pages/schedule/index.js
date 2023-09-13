@@ -1,9 +1,9 @@
-import RootLayout from '@/app/layout';
+import Page from '@/app/page';
 
 export default function Schedule() {
   return (
-    <RootLayout>
+    <Page>
       <main className="min-h-screen w-full">Schedule</main>
-    </RootLayout>
+    </Page>
   );
 }

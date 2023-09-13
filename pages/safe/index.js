@@ -1,9 +1,9 @@
-import RootLayout from '@/app/layout';
+import Page from '@/app/page';
 
 export default function Safe() {
   return (
-    <RootLayout>
+    <Page>
       <main className="min-h-screen w-full">Safe</main>
-    </RootLayout>
+    </Page>
   );
 }

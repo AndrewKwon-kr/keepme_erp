@@ -1,9 +1,9 @@
-import RootLayout from '@/app/layout';
+import Page from '@/app/page';
 
 export default function Home() {
   return (
-    <RootLayout>
+    <Page>
       <main className="w-full">Home</main>
-    </RootLayout>
+    </Page>
   );
 }

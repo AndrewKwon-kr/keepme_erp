@@ -1,9 +1,9 @@
-import RootLayout from '@/app/layout';
+import Page from '@/app/page';
 
 export default function Setting() {
   return (
-    <RootLayout>
+    <Page>
       <main className="min-h-screen w-full">Setting</main>
-    </RootLayout>
+    </Page>
   );
 }
