@@ -110,7 +110,7 @@ export default function Page({ children }) {
             <div
               className={
                 'px-5 py-2 flex items-center gap-x-3 text-base  rounded-xl' +
-                (menu.path == pathname
+                (menu.path.split('/')[1] == pathname.split('/')[1]
                   ? ' bg-[#3E56B4] text-white'
                   : ' bg-[#F2F3F6] text-[#555555]')
               }
