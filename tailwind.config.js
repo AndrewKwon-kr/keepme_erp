@@ -10,6 +10,9 @@ module.exports = {
       fontFamily: {
         pretendard: ['Pretendard'],
       },
+      boxShadow: {
+        box: '0px 1px 4px #00000029;',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
