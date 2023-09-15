@@ -11,6 +11,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Button } from '@mui/material';
 
 export default function Attendance() {
   const [alignment, setAlignment] = useState('time');
@@ -184,11 +185,11 @@ export default function Attendance() {
           <p className="text-base text-[#555555]">부서 별 연차소진 현황</p>
           <table className="mt-[30px] border">
             <thead>
-              <tr className="divide-x ">
+              <tr className="divide-x">
                 {dayoffStatusLabels.map((label, index) => (
                   <th
                     key={index}
-                    className="bg-[#555555] text-white text-xs font-light"
+                    className="bg-[#555555] text-white text-xs font-light py-2"
                   >
                     {label}
                   </th>
@@ -241,7 +242,30 @@ export default function Attendance() {
             options={byGroupExtendedWorkingTimeOptioins}
           />
         </div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
+        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
+          <p className="text-base text-[#555555]">급여관리 현황</p>
+          <Button
+            className="bg-[#597FB1] py-4"
+            variant="contained"
+            color="primary"
+          >
+            직원 (전체)
+          </Button>
+          <Button
+            className="bg-[#597FB1] py-4"
+            variant="contained"
+            color="primary"
+          >
+            업체 (소속)
+          </Button>
+          <Button
+            className="bg-[#597FB1] py-4"
+            variant="contained"
+            color="primary"
+          >
+            공정 (부서)
+          </Button>
+        </div>
       </div>
     </Page>
   );
