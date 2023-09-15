@@ -91,6 +91,7 @@ export default function Attendance() {
   };
 
   const byDayExtendedWorkingTimeOptioins = {
+    maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: false,
@@ -115,6 +116,7 @@ export default function Attendance() {
   };
 
   const byGroupExtendedWorkingTimeOptioins = {
+    maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: false,
@@ -163,14 +165,14 @@ export default function Attendance() {
           </div>
         </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
+        <div className="border rounded-md shadow-box p-5 pb-14 flex flex-col gap-y-5">
           <p className="text-base text-[#555555]">요일 별 연장근무시간</p>
           <BarChart
             data={byDayExtendedWorkingTimeData}
             options={byDayExtendedWorkingTimeOptioins}
           />
         </div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
+        <div className="border rounded-md shadow-box p-5 pb-14 flex flex-col gap-y-5">
           <div className="flex items-center">
             <p className="text-base text-[#555555]">그룹 별 연장근무시간</p>
             <ToggleButtonGroup
