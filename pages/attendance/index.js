@@ -35,6 +35,7 @@ export default function Attendance() {
         data: [12, 19, 3, 5],
         backgroundColor: ['#8169F7', '#2496EF', '#EA3869', '#FFC54E'],
         borderColor: ['#8169F7', '#2496EF', '#EA3869', '#FFC54E'],
+        cutout: 90,
       },
     ],
   };
@@ -157,11 +158,13 @@ export default function Attendance() {
           </div>
           <div className="min-w-[325px] border rounded-md shadow-box p-5 flex flex-col gap-y-5">
             <p className="text-base text-[#555555]">부서 별 출근현황</p>
-            <DoughnutChart
-              data={departmentStatusData}
-              plugins={[ChartDataLabels]}
-              options={departmentStatusOptions}
-            />
+            <div className=" h-full flex items-center justify-center">
+              <DoughnutChart
+                data={departmentStatusData}
+                plugins={[ChartDataLabels]}
+                options={departmentStatusOptions}
+              />
+            </div>
           </div>
         </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
