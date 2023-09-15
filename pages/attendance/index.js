@@ -6,9 +6,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import DoughnutChart from '@/components/common/DoughnutChart';
+import BarChart from '@/components/common/BarChart';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from 'moment';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 export default function Attendance() {
+  const [alignment, setAlignment] = useState('time');
+  const handleChangeAlignment = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+
   const statusList = [
     { title: '금일 전체 / 출근', number: '440 / 434' },
     { title: '미출근(퇴사)', number: 2 },
@@ -30,7 +39,7 @@ export default function Attendance() {
     ],
   };
 
-  const options = {
+  const departmentStatusOptions = {
     plugins: {
       legend: {
         display: false,
@@ -49,6 +58,70 @@ export default function Attendance() {
       },
     },
   };
+  const dayList = [
+    moment('2023-09-23').format('M/DD'),
+    moment('2023-09-24').format('M/DD'),
+    moment('2023-09-25').format('M/DD'),
+    moment('2023-09-26').format('M/DD'),
+    moment('2023-09-27').format('M/DD'),
+    moment('2023-09-28').format('M/DD'),
+    moment('2023-09-29').format('M/DD'),
+  ];
+  const timeList = [
+    moment('2021-10-09T00:00:00+09:00').format('HH:mm'),
+    moment('2021-10-09T01:00:00+09:00').format('HH:mm'),
+    moment('2021-10-09T02:00:00+09:00').format('HH:mm'),
+    moment('2021-10-09T03:00:00+09:00').format('HH:mm'),
+    moment('2021-10-09T04:00:00+09:00').format('HH:mm'),
+    moment('2021-10-09T05:00:00+09:00').format('HH:mm'),
+    moment('2021-10-09T06:00:00+09:00').format('HH:mm'),
+  ];
+
+  const byDayExtendedWorkingTimeData = {
+    labels: dayList,
+    datasets: [
+      {
+        labels: dayList,
+        data: [12, 19, 3, 5, 1, 2, 3, 4],
+        backgroundColor: '#CB5435',
+        borderColor: '#CB5435',
+        barThickness: 10,
+      },
+    ],
+  };
+
+  const byDayExtendedWorkingTimeOptioins = {
+    responsive: true,
+    plugins: {
+      legend: false,
+      title: false,
+    },
+  };
+
+  const byGroupExtendedWorkingTimeData = {
+    labels: alignment === 'time' ? timeList : dayList,
+    datasets: [
+      {
+        labels: alignment === 'time' ? timeList : dayList,
+        data:
+          alignment === 'time'
+            ? [1, 5, 23, 45, 74, 23, 15]
+            : [12, 19, 3, 5, 1, 2, 3, 4],
+        backgroundColor: '#597FB1',
+        borderColor: '#597FB1',
+        barThickness: 10,
+      },
+    ],
+  };
+
+  const byGroupExtendedWorkingTimeOptioins = {
+    responsive: true,
+    plugins: {
+      legend: false,
+      title: false,
+    },
+  };
+
   return (
     <Page>
       <div className="px-5 pt-9 pb-20 w-full h-[calc(100vh_-_148px)] grid grid-cols-3 grid-rows-2 gap-5">
@@ -85,13 +158,38 @@ export default function Attendance() {
             <DoughnutChart
               data={departmentStatusData}
               plugins={[ChartDataLabels]}
-              options={options}
+              options={departmentStatusOptions}
             />
           </div>
         </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
+        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
+          <p className="text-base text-[#555555]">요일 별 연장근무시간</p>
+          <BarChart
+            data={byDayExtendedWorkingTimeData}
+            options={byDayExtendedWorkingTimeOptioins}
+          />
+        </div>
+        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
+          <div className="flex items-center">
+            <p className="text-base text-[#555555]">그룹 별 연장근무시간</p>
+            <ToggleButtonGroup
+              className="ml-auto h-6"
+              color="primary"
+              value={alignment}
+              exclusive
+              onChange={handleChangeAlignment}
+              aria-label="Platform"
+            >
+              <ToggleButton value="time">시간별</ToggleButton>
+              <ToggleButton value="day">요일별</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+          <BarChart
+            data={byGroupExtendedWorkingTimeData}
+            options={byGroupExtendedWorkingTimeOptioins}
+          />
+        </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
       </div>
     </Page>
