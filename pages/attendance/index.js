@@ -124,6 +124,19 @@ export default function Attendance() {
       title: false,
     },
   };
+  const dayoffStatusLabels = [
+    '부서',
+    '연차발생',
+    '연차소진',
+    '잔여연차',
+    '소진율',
+  ];
+  const dayoffStatusDatas = [
+    { department: '철근', allCount: 155, useCount: 100 },
+    { department: '공무', allCount: 155, useCount: 100 },
+    { department: '비계', allCount: 155, useCount: 100 },
+    { department: '노무', allCount: 155, useCount: 100 },
+  ];
 
   return (
     <Page>
@@ -167,7 +180,40 @@ export default function Attendance() {
             </div>
           </div>
         </div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col"></div>
+        <div className="border rounded-md shadow-box p-5 flex flex-col">
+          <p className="text-base text-[#555555]">부서 별 연차소진 현황</p>
+          <table className="mt-[30px] border">
+            <thead>
+              <tr className="divide-x ">
+                {dayoffStatusLabels.map((label, index) => (
+                  <th
+                    key={index}
+                    className="bg-[#555555] text-white text-xs font-light"
+                  >
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {dayoffStatusDatas.map((data, index) => (
+                <tr key={index} className="text-center divide-x divide-y">
+                  <td className="px-[30px] py-5 bg-[#F2F3F6] text-[#787878] text-xs border border-b">
+                    {data.department}
+                  </td>
+                  <td className="px-[30px] py-5 text-xs">{data.allCount}</td>
+                  <td className="px-[30px] py-5 text-xs">{data.useCount}</td>
+                  <td className="px-[30px] py-5 text-xs text-[#3E56B4] font-semibold">
+                    {data.allCount - data.useCount}
+                  </td>
+                  <td className="px-[30px] py-5 text-xs text-[#787878]">
+                    {((data.useCount / data.allCount) * 100).toFixed(2)}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <div className="border rounded-md shadow-box p-5 pb-14 flex flex-col gap-y-5">
           <p className="text-base text-[#555555]">요일 별 연장근무시간</p>
           <BarChart
