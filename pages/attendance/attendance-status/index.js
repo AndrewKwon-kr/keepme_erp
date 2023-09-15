@@ -16,8 +16,10 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useAtomValue } from 'jotai';
 import { areaAtom } from '@/app/page';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 
 export default function Attendance() {
+  const router = useRouter();
   const [rowSelection, setRowSelection] = useState({});
   const [headers, setHeaders] = useState([]);
   const [belong, setBelong] = useState(1);
@@ -293,6 +295,15 @@ export default function Attendance() {
               borderColor: 'black black black black',
             },
           }}
+          renderBottomToolbarCustomActions={({ table }) => (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => router.back()}
+            >
+              이전 페이지로
+            </Button>
+          )}
           // renderTopToolbar={({ table }) => (
           //   <Box
           //     sx={{
