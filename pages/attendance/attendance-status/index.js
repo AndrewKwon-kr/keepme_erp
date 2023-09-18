@@ -295,15 +295,15 @@ export default function Attendance() {
               borderColor: 'black black black black',
             },
           }}
-          renderBottomToolbarCustomActions={({ table }) => (
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => router.back()}
-            >
-              이전 페이지로
-            </Button>
-          )}
+          // renderBottomToolbarCustomActions={({ table }) => (
+          //   <Button
+          //     variant="outlined"
+          //     size="small"
+          //     onClick={() => router.back()}
+          //   >
+          //     이전 페이지로
+          //   </Button>
+          // )}
           // renderTopToolbar={({ table }) => (
           //   <Box
           //     sx={{
@@ -392,7 +392,15 @@ export default function Attendance() {
             )
           }
         />
-        {/* </Box> */}
+        <Button
+          className="mt-5"
+          variant="outlined"
+          color="primary"
+          size="small"
+          onClick={() => router.back()}
+        >
+          이전 페이지로
+        </Button>
       </main>
     </Page>
   );
