@@ -13,6 +13,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useAtomValue } from 'jotai';
 import { areaAtom } from '@/app/page';
 import moment from 'moment';
@@ -70,7 +72,7 @@ export default function Attendance() {
 
   useEffect(() => {
     //do something when the row selection changes...
-    console.info({ rowSelection });
+    console.info(rowSelection);
   }, [rowSelection]);
 
   useEffect(() => {
@@ -155,6 +157,17 @@ export default function Attendance() {
       }, 2000);
     } finally {
       // console.log(array);
+    }
+  };
+  const onClickAddMember = () => {
+    console.log('click!!');
+  };
+  const onClickRemoveMember = () => {
+    const isOpen = confirm(
+      `${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`
+    );
+    if (isOpen) {
+      alert('삭제');
     }
   };
 
@@ -295,52 +308,9 @@ export default function Attendance() {
               borderColor: 'black black black black',
             },
           }}
-          // renderBottomToolbarCustomActions={({ table }) => (
-          //   <Button
-          //     variant="outlined"
-          //     size="small"
-          //     onClick={() => router.back()}
-          //   >
-          //     이전 페이지로
-          //   </Button>
-          // )}
-          // renderTopToolbar={({ table }) => (
-          //   <Box
-          //     sx={{
-          //       display: 'flex',
-          //       gap: '1rem',
-          //       p: '0.5rem',
-          //       flexWrap: 'wrap',
-          //     }}
-          //   >
-          //     {datas.length > 0 && (
-          //       <Button
-          //         color="primary"
-          //         startIcon={<FileDownloadIcon />}
-          //         variant="outlined"
-          //       >
-          //         <CSVLink
-          //           asyncOnClick={true}
-          //           data={datas}
-          //           headers={headers}
-          //           filename={'20240907_근태.csv'}
-          //         >
-          //           엑셀 다운로드
-          //         </CSVLink>
-          //       </Button>
-          //     )}
-          //   </Box>
-          // )}
           renderTopToolbarCustomActions={({ table }) =>
             filteredData.length > 0 && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '1rem',
-                  p: '0.5rem',
-                  flexWrap: 'wrap',
-                }}
-              >
+              <div className="w-full flex items-center gap-x-5">
                 <Button
                   color="primary"
                   //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
@@ -388,9 +358,34 @@ export default function Attendance() {
                     선택된 열 엑셀다운
                   </CSVLink>
                 </Button>
-              </Box>
+                <Button
+                  className="ml-auto"
+                  variant="outlined"
+                  color="primary"
+                  startIcon={<PersonAddIcon />}
+                  onClick={onClickAddMember}
+                >
+                  사람 추가
+                </Button>
+                <Button
+                  className=""
+                  variant="outlined"
+                  color="error"
+                  startIcon={<PersonRemoveIcon />}
+                  disabled={Object.keys(rowSelection).length === 0}
+                  onClick={onClickRemoveMember}
+                >
+                  사람 삭제
+                </Button>
+              </div>
             )
           }
+          muiTableBodyRowProps={({ row }) => ({
+            onDoubleClick: (event) => {
+              alert(`ID: ${row.id} 더블클릭!`);
+              // console.info(event, row.id);
+            },
+          })}
         />
         <Button
           className="mt-5"
