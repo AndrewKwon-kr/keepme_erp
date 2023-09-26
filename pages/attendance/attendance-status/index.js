@@ -28,7 +28,7 @@ export default function Attendance() {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(moment());
-  const [datas, setDatas] = useState([]);
+  const [originData, setOriginData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [checked, setChecked] = useState(true);
@@ -83,7 +83,7 @@ export default function Attendance() {
 
     if (name == '') {
       setFilteredData(
-        datas.filter(
+        originData.filter(
           (data) =>
             moment(data.date).isSameOrAfter(start) &&
             moment(data.date).isSameOrBefore(end)
@@ -91,7 +91,7 @@ export default function Attendance() {
       );
     } else {
       setFilteredData(
-        datas.filter(
+        originData.filter(
           (data) =>
             moment(data.date).isSameOrAfter(start) &&
             moment(data.date).isSameOrBefore(end) &&
@@ -105,7 +105,7 @@ export default function Attendance() {
     const end = endDate.endOf('day');
 
     setFilteredData(
-      datas.filter(
+      originData.filter(
         (data) =>
           moment(data.date).isSameOrAfter(start) &&
           moment(data.date).isSameOrBefore(end) &&
@@ -150,9 +150,8 @@ export default function Attendance() {
     }
     try {
       setTimeout(() => {
-        setDatas(array);
+        setOriginData(array);
         setFilteredData(array);
-
         setIsLoading(false);
       }, 2000);
     } finally {
@@ -163,11 +162,14 @@ export default function Attendance() {
     console.log('click!!');
   };
   const onClickRemoveMember = () => {
-    const isOpen = confirm(
-      `${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`
-    );
-    if (isOpen) {
-      alert('삭제');
+    if (
+      confirm(
+        `${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`
+      )
+    ) {
+      alert('삭제가 완료되었습니다.');
+      getTableData();
+      setRowSelection({});
     }
   };
 
@@ -214,7 +216,7 @@ export default function Attendance() {
                 onChange={(e) => setName(e.target.value)}
                 displayEmpty
               >
-                {datas.map((data) => (
+                {originData.map((data) => (
                   <MenuItem key={data.id} value={data.name}>
                     {data.name}
                   </MenuItem>
@@ -285,7 +287,7 @@ export default function Attendance() {
         {/* <Box> */}
         <MaterialReactTable
           columns={columns}
-          data={checked ? datas : filteredData}
+          data={checked ? originData : filteredData}
           enableRowSelection
           enableStickyHeader
           enableStickyFooter
