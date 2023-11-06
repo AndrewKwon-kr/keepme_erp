@@ -12,9 +12,13 @@ import moment from 'moment';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Button } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 export default function Attendance() {
   const [alignment, setAlignment] = useState('time');
+  const [group, setGroup] = useState(0);
   const handleChangeAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
@@ -31,7 +35,7 @@ export default function Attendance() {
     labels: ['노무', '철근', '공무', '비계'],
     datasets: [
       {
-        label: '명 ',
+        label: '인원 ',
         labels: ['노무', '철근', '공무', '비계'],
         data: [12, 19, 3, 5],
         backgroundColor: ['#8169F7', '#2496EF', '#EA3869', '#FFC54E'],
@@ -139,6 +143,10 @@ export default function Attendance() {
     { department: '노무', allCount: 155, useCount: 100 },
   ];
 
+  const onChangeGroupRunTime = (event) => {
+    setGroup(event.target.value);
+  };
+
   return (
     <Page>
       <div className="px-5 pt-9 pb-20 w-full h-[calc(100vh_-_148px)] grid grid-cols-3 grid-rows-2 gap-5">
@@ -216,13 +224,13 @@ export default function Attendance() {
           </table>
         </div>
         <div className="border rounded-md shadow-box p-5 pb-14 flex flex-col gap-y-5">
-          <p className="text-base text-[#555555]">요일 별 연장근무시간</p>
+          <p className="text-base text-[#555555]">날짜 별 연장근무시간</p>
           <BarChart
             data={byDayExtendedWorkingTimeData}
             options={byDayExtendedWorkingTimeOptioins}
           />
         </div>
-        <div className="border rounded-md shadow-box p-5 pb-14 flex flex-col gap-y-5">
+        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
           <div className="flex items-center">
             <p className="text-base text-[#555555]">그룹 별 연장근무시간</p>
             <ToggleButtonGroup
@@ -237,10 +245,29 @@ export default function Attendance() {
               <ToggleButton value="day">요일별</ToggleButton>
             </ToggleButtonGroup>
           </div>
-          <BarChart
-            data={byGroupExtendedWorkingTimeData}
-            options={byGroupExtendedWorkingTimeOptioins}
-          />
+          <FormControl>
+            <Select
+              className="h-9 w-[180px] active:outline-none"
+              value={group}
+              onChange={onChangeGroupRunTime}
+              displayEmpty
+            >
+              <MenuItem value={0}>철근</MenuItem>
+              <MenuItem value={1}>노무</MenuItem>
+              <MenuItem value={2}>비계</MenuItem>
+              <MenuItem value={3}>공무</MenuItem>
+            </Select>
+          </FormControl>
+          <div
+            className="h-full flex flex-col items-center justify-center bg-blue-700 rounded-md"
+            onClick={() => alert('click')}
+          ></div>
+          <div className="h-full">
+            <BarChart
+              data={byGroupExtendedWorkingTimeData}
+              options={byGroupExtendedWorkingTimeOptioins}
+            />
+          </div>
         </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
           <p className="text-base text-[#555555]">급여관리 현황</p>
