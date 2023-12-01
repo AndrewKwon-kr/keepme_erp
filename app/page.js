@@ -124,7 +124,10 @@ export default function Page({ children }) {
     <ThemeProvider theme={theme}>
       <div className="w-screen flex">
         <Head>
-          <title>KeepMe_ERP</title>
+          <title>
+            KeepMe_
+            {menus.filter((menu) => menu.path.split('/')[1] == pathname.split('/')[1])[0].name}
+          </title>
         </Head>
         <div
           className={
