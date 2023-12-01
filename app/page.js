@@ -135,7 +135,7 @@ export default function Page({ children }) {
             <Link href={menu.path} key={menu.name}>
               <div
                 className={
-                  'px-5 py-2 flex items-center gap-x-3 text-base rounded-xl' +
+                  'px-5 py-2 flex items-center gap-x-3 text-base rounded-xl hover:font-bold hover:scale-110' +
                   (menu.path.split('/')[1] == pathname.split('/')[1]
                     ? ' bg-[#3E56B4] text-white'
                     : ' bg-[#F2F3F6] text-[#555555]')
