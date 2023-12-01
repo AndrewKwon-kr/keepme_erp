@@ -15,6 +15,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchIcon from '@mui/icons-material/Search';
 
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -64,11 +67,11 @@ export default function Page({ children }) {
   const [area, setArea] = useAtom(areaAtom);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isHidden, setIsHidden] = useState(false);
+  const [isNone, setIsNone] = useState(false);
   const open = Boolean(anchorEl);
 
-  const [realTime, setRealTime] = useState(
-    moment().format('YYYY년 MM월 DD일(dd)')
-  );
+  const [realTime, setRealTime] = useState(moment().format('YYYY년 MM월 DD일(dd)'));
   // useInterval
   useInterval(() => {
     setRealTime(moment().format('YYYY년 MM월 DD일(dd)'));
@@ -108,23 +111,35 @@ export default function Page({ children }) {
   const onChangeSearch = (e) => {
     setSearch(e.target.value);
   };
+
+  useEffect(() => {
+    if (isHidden) {
+      setTimeout(() => setIsNone(true), 400);
+    } else {
+      setIsNone(false);
+    }
+  }, [isHidden]);
+
   return (
     <ThemeProvider theme={theme}>
       <div className="w-screen flex">
         <Head>
           <title>KeepMe_ERP</title>
         </Head>
-        <div className="pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5">
+        <div
+          className={
+            'pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5 transition ease-in-out delay-150 duration-300' +
+            (isNone ? ' hidden' : isHidden && ' opacity-0 -translate-x-full')
+          }>
           {menus.map((menu) => (
             <Link href={menu.path} key={menu.name}>
               <div
                 className={
-                  'px-5 py-2 flex items-center gap-x-3 text-base  rounded-xl' +
+                  'px-5 py-2 flex items-center gap-x-3 text-base rounded-xl' +
                   (menu.path.split('/')[1] == pathname.split('/')[1]
                     ? ' bg-[#3E56B4] text-white'
                     : ' bg-[#F2F3F6] text-[#555555]')
-                }
-              >
+                }>
                 {setIcon(menu.icon)}
                 <div>{menu.name}</div>
               </div>
@@ -133,52 +148,57 @@ export default function Page({ children }) {
         </div>
         <div className="min-w-[calc(100%_-_250px)] max-w-[1380px] flex flex-col">
           <div className="flex flex-col px-5">
-            <div className="flex items-center mt-5 ml-auto mr-5 gap-x-5">
-              <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
-                <SearchIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
-                <input
-                  className="focus:outline-none w-full h-full rounded-md  pl-[48px] pr-2 px-4 text-sm"
-                  value={search}
-                  onChange={onChangeSearch}
-                  placeholder="메뉴검색"
-                />
+            <div className="flex items-center mt-5 mr-5">
+              <div className="mr-auto">
+                <IconButton aria-label="menu" onClick={() => setIsHidden(!isHidden)}>
+                  <MenuIcon />
+                </IconButton>
               </div>
-              <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
-                <AccountCircleIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
-                <input
-                  className="focus:outline-none w-full h-full rounded-md  pl-[48px] pr-2 px-4 text-sm"
-                  value={search}
-                  onChange={onChangeSearch}
-                  placeholder="직원검색"
-                />
-              </div>
-              <div className="flex items-center gap-x-2.5">
-                <Button
-                  id="basic-button"
-                  aria-controls={open ? 'basic-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={handleClick}
-                >
-                  <div className="flex items-center gap-x-2.5">
-                    <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
-                      배
+              <div className="flex gap-x-5">
+                <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
+                  <SearchIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
+                  <input
+                    className="focus:outline-none w-full h-full rounded-md  pl-[48px] pr-2 px-4 text-sm"
+                    value={search}
+                    onChange={onChangeSearch}
+                    placeholder="메뉴검색"
+                  />
+                </div>
+                <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
+                  <AccountCircleIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
+                  <input
+                    className="focus:outline-none w-full h-full rounded-md  pl-[48px] pr-2 px-4 text-sm"
+                    value={search}
+                    onChange={onChangeSearch}
+                    placeholder="직원검색"
+                  />
+                </div>
+                <div className="flex items-center gap-x-2.5">
+                  <Button
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}>
+                    <div className="flex items-center gap-x-2.5">
+                      <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
+                        권
+                      </div>
+                      <div className="text-base">권혁진</div>
                     </div>
-                    <div className="text-base ">배강주</div>
-                  </div>
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                >
-                  <MenuItem onClick={handleClose}>프로필</MenuItem>
-                  <MenuItem onClick={handleClose}>로그아웃</MenuItem>
-                </Menu>
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}>
+                    <MenuItem onClick={handleClose}>프로필</MenuItem>
+                    <MenuItem onClick={handleClose}>로그아웃</MenuItem>
+                  </Menu>
+                </div>
               </div>
             </div>
             <div className="mt-11 flex items-center">
@@ -191,8 +211,7 @@ export default function Page({ children }) {
                   className="ml-5 h-9 w-[180px] active:outline-none"
                   value={area}
                   onChange={handleChange}
-                  displayEmpty
-                >
+                  displayEmpty>
                   <MenuItem value={0}>부산 가야현장</MenuItem>
                   <MenuItem value={1}>부산 다대포현장</MenuItem>
                   <MenuItem value={2}>김해 장유현장</MenuItem>

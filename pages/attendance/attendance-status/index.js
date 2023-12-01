@@ -20,6 +20,16 @@ import { areaAtom } from '@/app/page';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+import Alert from '@mui/material/Alert';
+
 export default function Attendance() {
   const router = useRouter();
   const [rowSelection, setRowSelection] = useState({});
@@ -32,43 +42,170 @@ export default function Attendance() {
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [checked, setChecked] = useState(true);
+  const [selectedMember, setSelectedMember] = useState({});
 
   const areaValue = useAtomValue(areaAtom);
 
   const columns = useMemo(() => [
-    { accessorKey: 'id', header: 'ID', size: 40 },
-    { accessorKey: 'date', header: '일시', size: 120 },
-    { accessorKey: 'belong', header: '소속', size: 80 },
-    { accessorKey: 'department', header: '부서', size: 80 },
-    { accessorKey: 'position', header: '직책', size: 80 },
-    { accessorKey: 'name', header: '이름', size: 80 },
-    { accessorKey: 'phoneNumber', header: '연락처', size: 120 },
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      size: 20,
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    {
+      accessorKey: 'date',
+      header: '일시',
+      size: 80,
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    {
+      accessorKey: 'belong',
+      header: '소속',
+      size: 80,
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    {
+      accessorKey: 'department',
+      header: '부서',
+      size: 80,
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    {
+      accessorKey: 'position',
+      header: '직책',
+      size: 80,
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    {
+      accessorKey: 'name',
+      header: '이름',
+      size: 80,
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    {
+      accessorKey: 'phoneNumber',
+      header: '연락처',
+      size: 120,
+      enableClickToCopy: true,
+      Cell: ({ cell }) => (
+        <div className="font-bold bg-pink-200">{cell.getValue().substring(0, 9)}****</div>
+      ),
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
     {
       accessorKey: 'registrationNumber',
       header: '주민번호(등록번호)',
-      size: 200,
+      size: 120,
+      enableClickToCopy: true,
+      Cell: ({ cell }) => (
+        <div className="font-bold text-blue-700">{cell.getValue().substring(0, 8)}******</div>
+      ),
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
     },
     { accessorKey: 'startedAt', header: '출근', size: 60 },
     { accessorKey: 'endedAt', header: '퇴근', size: 60 },
-    { accessorKey: '1', header: '1', size: 60 },
-    { accessorKey: '2', header: '2', size: 60 },
-    { accessorKey: '3', header: '3', size: 60 },
-    { accessorKey: '4', header: '4', size: 60 },
-    { accessorKey: '5', header: '5', size: 60 },
+    {
+      accessorKey: '1',
+      header: '사진 비교',
+      size: 60,
+      Cell: ({ cell }) => (
+        <div
+          className="font-bold text-blue-700 underline cursor-pointer"
+          onClick={() => handleClickOpen(cell.getValue())}>
+          확인
+        </div>
+      ),
+      muiTableHeadCellProps: {
+        align: 'center',
+      },
+      muiTableBodyCellProps: {
+        align: 'center',
+      },
+    },
+    // { accessorKey: '2', header: '2', size: 60 },
+    // { accessorKey: '3', header: '3', size: 60 },
+    // { accessorKey: '4', header: '4', size: 60 },
+    // { accessorKey: '5', header: '5', size: 60 },
   ]);
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = (value) => {
+    const member = originData.filter((data) => data.id == value)[0];
+
+    setSelectedMember(member);
+
+    if (member.todayImageUrl) {
+      setOpen(true);
+    } else {
+      alert('아직 출근 전입니다.');
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     setHeaders(
       columns.map((column) => ({
         label: column.header,
         key: column.accessorKey,
-      }))
+      })),
     );
   }, []);
 
   useEffect(() => {
     getTableData();
+    initState();
   }, [areaValue]);
+
+  const initState = () => {
+    setStartDate(moment());
+    setEndDate(moment());
+    setChecked(true);
+  };
 
   useEffect(() => {
     //do something when the row selection changes...
@@ -84,10 +221,8 @@ export default function Attendance() {
     if (name == '') {
       setFilteredData(
         originData.filter(
-          (data) =>
-            moment(data.date).isSameOrAfter(start) &&
-            moment(data.date).isSameOrBefore(end)
-        )
+          (data) => moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
+        ),
       );
     } else {
       setFilteredData(
@@ -95,8 +230,8 @@ export default function Attendance() {
           (data) =>
             moment(data.date).isSameOrAfter(start) &&
             moment(data.date).isSameOrBefore(end) &&
-            data.name == name
-        )
+            data.name == name,
+        ),
       );
     }
   }, [startDate, endDate]);
@@ -109,8 +244,8 @@ export default function Attendance() {
         (data) =>
           moment(data.date).isSameOrAfter(start) &&
           moment(data.date).isSameOrBefore(end) &&
-          data.name == name
-      )
+          data.name == name,
+      ),
     );
   }, [name]);
 
@@ -146,6 +281,13 @@ export default function Attendance() {
         registrationNumber: '780102-1122338',
         startedAt: '08:00',
         endedAt: '17:00',
+        1: i,
+        originImageUrl:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUWRQcyRNDhGpkoRvgSTtiYMI1T_8PPgLwEA&usqp=CAU',
+        todayImageUrl:
+          i < 5
+            ? 'https://thumb.mt.co.kr/06/2023/06/2023062717453220668_1.jpg/dims/optimize/'
+            : null,
       };
     }
     try {
@@ -162,15 +304,14 @@ export default function Attendance() {
     console.log('click!!');
   };
   const onClickRemoveMember = () => {
-    if (
-      confirm(
-        `${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`
-      )
-    ) {
+    if (confirm(`${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`)) {
       alert('삭제가 완료되었습니다.');
       getTableData();
       setRowSelection({});
     }
+  };
+  const onClickFaceCheck = (value) => {
+    alert(value);
   };
 
   return (
@@ -184,8 +325,7 @@ export default function Attendance() {
                 className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
                 value={belong}
                 onChange={handleChangeBelong}
-                displayEmpty
-              >
+                displayEmpty>
                 <MenuItem value={0}>부산 가야현장</MenuItem>
                 <MenuItem value={1}>부산 다대포현장</MenuItem>
                 <MenuItem value={2}>김해 장유현장</MenuItem>
@@ -199,8 +339,7 @@ export default function Attendance() {
                 className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
                 value={belong}
                 onChange={handleChangeBelong}
-                displayEmpty
-              >
+                displayEmpty>
                 <MenuItem value={0}>골조</MenuItem>
                 <MenuItem value={1}>콘크리트</MenuItem>
                 <MenuItem value={2}>크레인</MenuItem>
@@ -214,8 +353,7 @@ export default function Attendance() {
                 className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                displayEmpty
-              >
+                displayEmpty>
                 {originData.map((data) => (
                   <MenuItem key={data.id} value={data.name}>
                     {data.name}
@@ -254,24 +392,21 @@ export default function Attendance() {
               className="bg-[#555555] w-20"
               variant="contained"
               onClick={() => onClickPeriod(1)}
-              disabled={checked}
-            >
+              disabled={checked}>
               1개월
             </Button>
             <Button
               className="bg-[#555555] w-20"
               variant="contained"
               onClick={() => onClickPeriod(3)}
-              disabled={checked}
-            >
+              disabled={checked}>
               3개월
             </Button>
             <Button
               className="bg-[#555555] w-20"
               variant="contained"
               onClick={() => onClickPeriod(6)}
-              disabled={checked}
-            >
+              disabled={checked}>
               6개월
             </Button>
           </div>
@@ -291,6 +426,8 @@ export default function Attendance() {
           enableRowSelection
           enableStickyHeader
           enableStickyFooter
+          enableColumnActions={false}
+          enableSorting={false}
           muiTableContainerProps={{
             sx: {
               maxHeight: 700,
@@ -305,7 +442,7 @@ export default function Attendance() {
           muiTableHeadCellProps={{
             sx: {
               backgroundColor: '#F2F3F6',
-              BorderStyle: 'solid',
+              borderStyle: 'solid',
               borderWidth: '1px 0px 1px 0px',
               borderColor: 'black black black black',
             },
@@ -317,14 +454,12 @@ export default function Attendance() {
                   color="primary"
                   //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
                   startIcon={<FileDownloadIcon />}
-                  variant="outlined"
-                >
+                  variant="outlined">
                   <CSVLink
                     asyncOnClick={true}
                     data={filteredData}
                     headers={headers}
-                    filename={'20240907_근태.csv'}
-                  >
+                    filename={'20240907_근태.csv'}>
                     엑셀 다운로드
                   </CSVLink>
                 </Button>
@@ -332,31 +467,22 @@ export default function Attendance() {
                   disabled={table.getRowModel().rows.length === 0}
                   //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
                   startIcon={<FileDownloadIcon />}
-                  variant="outlined"
-                >
+                  variant="outlined">
                   <CSVLink
                     data={table.getRowModel().rows.map((row) => row.original)}
                     headers={headers}
-                    filename={'20240907_근태.csv'}
-                  >
+                    filename={'20240907_근태.csv'}>
                     현재 페이지 엑셀다운
                   </CSVLink>
                 </Button>
                 <Button
-                  disabled={
-                    !table.getIsSomeRowsSelected() &&
-                    !table.getIsAllRowsSelected()
-                  }
+                  disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
                   startIcon={<FileDownloadIcon />}
-                  variant="outlined"
-                >
+                  variant="outlined">
                   <CSVLink
-                    data={table
-                      .getSelectedRowModel()
-                      .rows.map((row) => row.original)}
+                    data={table.getSelectedRowModel().rows.map((row) => row.original)}
                     headers={headers}
-                    filename={'20240907_선택된_근로자_근태.csv'}
-                  >
+                    filename={'20240907_선택된_근로자_근태.csv'}>
                     선택된 열 엑셀다운
                   </CSVLink>
                 </Button>
@@ -365,8 +491,7 @@ export default function Attendance() {
                   variant="outlined"
                   color="primary"
                   startIcon={<PersonAddIcon />}
-                  onClick={onClickAddMember}
-                >
+                  onClick={onClickAddMember}>
                   사람 추가
                 </Button>
                 <Button
@@ -375,8 +500,7 @@ export default function Attendance() {
                   color="error"
                   startIcon={<PersonRemoveIcon />}
                   disabled={Object.keys(rowSelection).length === 0}
-                  onClick={onClickRemoveMember}
-                >
+                  onClick={onClickRemoveMember}>
                   사람 삭제
                 </Button>
               </div>
@@ -394,10 +518,33 @@ export default function Attendance() {
           variant="outlined"
           color="primary"
           size="small"
-          onClick={() => router.back()}
-        >
+          onClick={() => router.back()}>
           이전 페이지로
         </Button>
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description">
+          <DialogTitle>해당 근로자({selectedMember.name})의 사진이 서로 일치합니까?</DialogTitle>
+          <DialogContent>
+            <div className="w-full grid grid-cols-2">
+              <div className="flex flex-col items-center justify-center">
+                <img className="h-3/4" src={selectedMember.originImageUrl} />
+                <span className="mt-5">등록된 사진</span>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <img className="aspect-auto h-3/4" src={selectedMember.todayImageUrl} />
+                <span className="mt-5">오늘자 사진</span>
+              </div>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>아니오</Button>
+            <Button onClick={handleClose}>예</Button>
+          </DialogActions>
+        </Dialog>
       </main>
     </Page>
   );

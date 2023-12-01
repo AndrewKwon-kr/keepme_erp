@@ -20,7 +20,9 @@ export default function Attendance() {
   const [alignment, setAlignment] = useState('time');
   const [group, setGroup] = useState(0);
   const handleChangeAlignment = (event, newAlignment) => {
-    setAlignment(newAlignment);
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
   };
 
   const statusList = [
@@ -64,24 +66,24 @@ export default function Attendance() {
       },
     },
   };
-  const dayList = [
-    moment('2023-09-23').format('M/DD'),
-    moment('2023-09-24').format('M/DD'),
-    moment('2023-09-25').format('M/DD'),
-    moment('2023-09-26').format('M/DD'),
-    moment('2023-09-27').format('M/DD'),
-    moment('2023-09-28').format('M/DD'),
-    moment('2023-09-29').format('M/DD'),
-  ];
-  const timeList = [
-    moment('2021-10-09T00:00:00+09:00').format('HH:mm'),
-    moment('2021-10-09T01:00:00+09:00').format('HH:mm'),
-    moment('2021-10-09T02:00:00+09:00').format('HH:mm'),
-    moment('2021-10-09T03:00:00+09:00').format('HH:mm'),
-    moment('2021-10-09T04:00:00+09:00').format('HH:mm'),
-    moment('2021-10-09T05:00:00+09:00').format('HH:mm'),
-    moment('2021-10-09T06:00:00+09:00').format('HH:mm'),
-  ];
+
+  const [dayList, setDayList] = useState([]);
+  const [timeList, setTimeList] = useState([]);
+
+  useEffect(() => {
+    let dayArray = [];
+    let timeArray = [];
+
+    for (let i = 0; i < 7; i++) {
+      const today = moment();
+      console.log(i + i);
+
+      dayArray.push(today.subtract(i, 'd').format('M/DD'));
+      timeArray.push(today.subtract(i, 'h').format('HH:mm'));
+    }
+    setDayList(dayArray.reverse());
+    setTimeList(timeArray.reverse());
+  }, []);
 
   const byDayExtendedWorkingTimeData = {
     labels: dayList,
@@ -110,10 +112,7 @@ export default function Attendance() {
     datasets: [
       {
         labels: alignment === 'time' ? timeList : dayList,
-        data:
-          alignment === 'time'
-            ? [1, 5, 23, 45, 74, 23, 15]
-            : [12, 19, 3, 5, 1, 2, 3, 4],
+        data: alignment === 'time' ? [1, 5, 23, 45, 74, 23, 15] : [12, 19, 3, 5, 1, 2, 3, 4],
         backgroundColor: '#597FB1',
         borderColor: '#597FB1',
         barThickness: 10,
@@ -129,13 +128,7 @@ export default function Attendance() {
       title: false,
     },
   };
-  const dayoffStatusLabels = [
-    '부서',
-    '연차발생',
-    '연차소진',
-    '잔여연차',
-    '소진율',
-  ];
+  const dayoffStatusLabels = ['부서', '연차발생', '연차소진', '잔여연차', '소진율'];
   const dayoffStatusDatas = [
     { department: '철근', allCount: 155, useCount: 100 },
     { department: '공무', allCount: 155, useCount: 100 },
@@ -168,12 +161,9 @@ export default function Attendance() {
                   className={
                     'flex items-center justify-between px-5 py-10 odd:border-r ' +
                     (index == 2 ? ' border-y' : index == 3 && ' border-y')
-                  }
-                >
+                  }>
                   <p className="font-medium">{status.title}</p>
-                  <p className="font-semibold text-[#3E56B4]">
-                    {status.number}
-                  </p>
+                  <p className="font-semibold text-[#3E56B4]">{status.number}</p>
                 </div>
               ))}
             </div>
@@ -189,16 +179,13 @@ export default function Attendance() {
             </div>
           </div>
         </div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col">
+        <div className="border rounded-md shadow-box p-5 flex flex-col overflow-auto">
           <p className="text-base text-[#555555]">부서 별 연차소진 현황</p>
           <table className="mt-[30px] border">
             <thead>
               <tr className="divide-x">
                 {dayoffStatusLabels.map((label, index) => (
-                  <th
-                    key={index}
-                    className="bg-[#555555] text-white text-xs font-light py-2"
-                  >
+                  <th key={index} className="bg-[#555555] text-white text-xs font-light py-2">
                     {label}
                   </th>
                 ))}
@@ -223,12 +210,14 @@ export default function Attendance() {
             </tbody>
           </table>
         </div>
-        <div className="border rounded-md shadow-box p-5 pb-14 flex flex-col gap-y-5">
+        <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
           <p className="text-base text-[#555555]">날짜 별 연장근무시간</p>
-          <BarChart
-            data={byDayExtendedWorkingTimeData}
-            options={byDayExtendedWorkingTimeOptioins}
-          />
+          <div className="h-full">
+            <BarChart
+              data={byDayExtendedWorkingTimeData}
+              options={byDayExtendedWorkingTimeOptioins}
+            />
+          </div>
         </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
           <div className="flex items-center">
@@ -239,8 +228,7 @@ export default function Attendance() {
               value={alignment}
               exclusive
               onChange={handleChangeAlignment}
-              aria-label="Platform"
-            >
+              aria-label="Platform">
               <ToggleButton value="time">시간별</ToggleButton>
               <ToggleButton value="day">요일별</ToggleButton>
             </ToggleButtonGroup>
@@ -250,18 +238,13 @@ export default function Attendance() {
               className="h-9 w-[180px] active:outline-none"
               value={group}
               onChange={onChangeGroupRunTime}
-              displayEmpty
-            >
+              displayEmpty>
               <MenuItem value={0}>철근</MenuItem>
               <MenuItem value={1}>노무</MenuItem>
               <MenuItem value={2}>비계</MenuItem>
               <MenuItem value={3}>공무</MenuItem>
             </Select>
           </FormControl>
-          <div
-            className="h-full flex flex-col items-center justify-center bg-blue-700 rounded-md"
-            onClick={() => alert('click')}
-          ></div>
           <div className="h-full">
             <BarChart
               data={byGroupExtendedWorkingTimeData}
@@ -271,25 +254,13 @@ export default function Attendance() {
         </div>
         <div className="border rounded-md shadow-box p-5 flex flex-col gap-y-5">
           <p className="text-base text-[#555555]">급여관리 현황</p>
-          <Button
-            className="bg-[#597FB1] py-4"
-            variant="contained"
-            color="primary"
-          >
+          <Button className="bg-[#597FB1] py-4" variant="contained" color="primary">
             직원 (전체)
           </Button>
-          <Button
-            className="bg-[#597FB1] py-4"
-            variant="contained"
-            color="primary"
-          >
+          <Button className="bg-[#597FB1] py-4" variant="contained" color="primary">
             업체 (소속)
           </Button>
-          <Button
-            className="bg-[#597FB1] py-4"
-            variant="contained"
-            color="primary"
-          >
+          <Button className="bg-[#597FB1] py-4" variant="contained" color="primary">
             공정 (부서)
           </Button>
         </div>

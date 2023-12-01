@@ -20,5 +20,5 @@ ChartJS.register(
 );
 
 export default function BarChart({data, options}) {
-  return <Bar data={data} options={options}  />;
+  return <Bar data={data} options={options} redraw />;
 }
