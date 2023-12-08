@@ -2,7 +2,7 @@ import Page from '@/app/page';
 import React, { useEffect, useMemo, useState } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { CSVLink } from 'react-csv';
-import { Box, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,7 +28,6 @@ import Slide from '@mui/material/Slide';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-import Alert from '@mui/material/Alert';
 
 export default function Attendance() {
   const router = useRouter();
@@ -509,7 +508,6 @@ export default function Attendance() {
           muiTableBodyRowProps={({ row }) => ({
             onDoubleClick: (event) => {
               alert(`ID: ${row.id} 더블클릭!`);
-              // console.info(event, row.id);
             },
           })}
         />

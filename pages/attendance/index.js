@@ -19,6 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 export default function Attendance() {
   const [alignment, setAlignment] = useState('time');
   const [group, setGroup] = useState(0);
+
   const handleChangeAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
@@ -76,7 +77,6 @@ export default function Attendance() {
 
     for (let i = 0; i < 7; i++) {
       const today = moment();
-      console.log(i + i);
 
       dayArray.push(today.subtract(i, 'd').format('M/DD'));
       timeArray.push(today.subtract(i, 'h').format('HH:mm'));

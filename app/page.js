@@ -59,6 +59,13 @@ const menus = [
   { path: '/setting', name: '설정', icon: 'setting' },
 ];
 
+const user = {
+  id: 0,
+  name: '권혁진',
+  imageUrl:
+    'https://beluv-images.s3.ap-northeast-2.amazonaws.com/user_profile_images/user_profile_13416_1701998414919.png',
+};
+
 export const areaAtom = atom(0);
 
 export default function Page({ children }) {
@@ -138,7 +145,7 @@ export default function Page({ children }) {
             <Link href={menu.path} key={menu.name}>
               <div
                 className={
-                  'px-5 py-2 flex items-center gap-x-3 text-base rounded-xl hover:font-bold hover:scale-110' +
+                  'px-5 py-2 flex items-center gap-x-3 text-base rounded-xl duration-150 hover:font-bold hover:scale-110' +
                   (menu.path.split('/')[1] == pathname.split('/')[1]
                     ? ' bg-[#3E56B4] text-white'
                     : ' bg-[#F2F3F6] text-[#555555]')
@@ -158,7 +165,7 @@ export default function Page({ children }) {
                 </IconButton>
               </div>
               <div className="flex gap-x-5">
-                <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
+                <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative max-lg:hidden">
                   <SearchIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
                   <input
                     className="focus:outline-none w-full h-full rounded-md  pl-[48px] pr-2 px-4 text-sm"
@@ -167,7 +174,7 @@ export default function Page({ children }) {
                     placeholder="메뉴검색"
                   />
                 </div>
-                <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative">
+                <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative max-lg:hidden">
                   <AccountCircleIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
                   <input
                     className="focus:outline-none w-full h-full rounded-md  pl-[48px] pr-2 px-4 text-sm"
@@ -184,10 +191,16 @@ export default function Page({ children }) {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}>
                     <div className="flex items-center gap-x-2.5">
-                      <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
-                        권
-                      </div>
-                      <div className="text-base">권혁진</div>
+                      {user.imageUrl ? (
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
+                          <img src={user.imageUrl} alt="프로필이미지" />
+                        </div>
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
+                          {user.name.substring(0, 1)}
+                        </div>
+                      )}
+                      <div className="text-base">{user.name}</div>
                     </div>
                   </Button>
                   <Menu
