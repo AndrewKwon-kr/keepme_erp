@@ -164,7 +164,7 @@ export default function Page({ children }) {
                   <MenuIcon />
                 </IconButton>
               </div>
-              <div className="flex gap-x-5">
+              <div className="flex items-center gap-x-5">
                 <div className="w-[250px] h-9 rounded-md border border-[#CCCCCC] relative max-lg:hidden">
                   <SearchIcon className="absolute left-4 top-2 text-[#787878] text-[20px]" />
                   <input

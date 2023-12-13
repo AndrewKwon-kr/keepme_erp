@@ -144,24 +144,24 @@ export default function Attendance() {
     },
     { accessorKey: 'startedAt', header: '출근', size: 60 },
     { accessorKey: 'endedAt', header: '퇴근', size: 60 },
-    {
-      accessorKey: '1',
-      header: '사진 비교',
-      size: 60,
-      Cell: ({ cell }) => (
-        <div
-          className="font-bold text-blue-700 underline cursor-pointer"
-          onClick={() => handleClickOpen(cell.getValue())}>
-          확인
-        </div>
-      ),
-      muiTableHeadCellProps: {
-        align: 'center',
-      },
-      muiTableBodyCellProps: {
-        align: 'center',
-      },
-    },
+    // {
+    //   accessorKey: '1',
+    //   header: '사진 비교',
+    //   size: 60,
+    //   Cell: ({ cell }) => (
+    //     <div
+    //       className="font-bold text-blue-700 underline cursor-pointer"
+    //       onClick={() => handleClickOpen(cell.getValue())}>
+    //       확인
+    //     </div>
+    //   ),
+    //   muiTableHeadCellProps: {
+    //     align: 'center',
+    //   },
+    //   muiTableBodyCellProps: {
+    //     align: 'center',
+    //   },
+    // },
     // { accessorKey: '2', header: '2', size: 60 },
     // { accessorKey: '3', header: '3', size: 60 },
     // { accessorKey: '4', header: '4', size: 60 },
