@@ -170,8 +170,8 @@ export default function Page({ children }) {
           }>
           <div
             className={
-              'w-full h-10 flex items-center justify-center transition ease-in duration-200 cursor-pointer rounded-md' +
-              (darkTheme ? ' bg-slate-800' : ' bg-slate-100')
+              'w-[210px] h-10 px-5 py-5 flex items-center justify-center transition ease-in duration-300 cursor-pointer rounded-md' +
+              (darkTheme ? ' bg-slate-500' : ' bg-slate-100')
             }
             onClick={handleToggle}>
             <IconButton onClick={handleToggle} color="inherit">

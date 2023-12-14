@@ -144,6 +144,7 @@ export default function Attendance() {
     },
     { accessorKey: 'startedAt', header: '출근', size: 60 },
     { accessorKey: 'endedAt', header: '퇴근', size: 60 },
+    { accessorKey: 'workdayCount', header: '출근 횟수', size: 60 },
     // {
     //   accessorKey: '1',
     //   header: '사진 비교',
@@ -287,6 +288,7 @@ export default function Attendance() {
           i < 5
             ? 'https://thumb.mt.co.kr/06/2023/06/2023062717453220668_1.jpg/dims/optimize/'
             : null,
+        workdayCount: i + 1,
       };
     }
     try {
