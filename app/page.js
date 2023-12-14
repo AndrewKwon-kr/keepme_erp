@@ -33,6 +33,8 @@ import { useInterval } from 'react-use';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const theme = createTheme({
   palette: {
@@ -127,6 +129,31 @@ export default function Page({ children }) {
     }
   }, [isHidden]);
 
+  const [darkTheme, setDarkTheme] = useState(undefined);
+
+  const handleToggle = () => {
+    setDarkTheme(!darkTheme);
+  };
+
+  useEffect(() => {
+    if (darkTheme !== undefined) {
+      if (darkTheme) {
+        document.body.setAttribute('data-theme', 'dark');
+        window.localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.removeAttribute('data-theme');
+        window.localStorage.setItem('theme', 'light');
+      }
+    }
+  }, [darkTheme]);
+
+  useEffect(() => {
+    const root = window.document.body;
+    const initialColorValue = root.style.getPropertyValue('--initial-color-mode');
+
+    setDarkTheme(initialColorValue === 'dark');
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <div className="w-screen flex">
@@ -141,6 +168,17 @@ export default function Page({ children }) {
             'pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5 transition ease-in-out delay-150 duration-300' +
             (isNone ? ' hidden' : isHidden && ' opacity-0 -translate-x-full')
           }>
+          <div
+            className={
+              'w-full h-10 flex items-center justify-center transition ease-in duration-200 cursor-pointer rounded-md' +
+              (darkTheme ? ' bg-slate-800' : ' bg-slate-100')
+            }
+            onClick={handleToggle}>
+            <IconButton onClick={handleToggle} color="inherit">
+              {darkTheme ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+            {darkTheme ? '다크모드' : '일반모드'}
+          </div>
           {menus.map((menu) => (
             <Link href={menu.path} key={menu.name}>
               <div
