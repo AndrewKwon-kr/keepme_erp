@@ -1,6 +1,6 @@
-import Page from '@/app/page';
+import Page from 'app/page';
 import React, { useEffect, useMemo, useState } from 'react';
-import { MaterialReactTable } from 'material-react-table';
+import { MRT_ColumnDef, MaterialReactTable } from 'material-react-table';
 import { CSVLink } from 'react-csv';
 import { Button } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -16,7 +16,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useAtomValue } from 'jotai';
-import { areaAtom } from '@/app/page';
+import { areaAtom } from 'app/page';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 
@@ -25,27 +25,76 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { LabelKeyObject } from 'react-csv/lib/core';
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
+type filterType = {};
 
 export default function Attendance() {
   const router = useRouter();
-  const [rowSelection, setRowSelection] = useState({});
-  const [headers, setHeaders] = useState([]);
-  const [belong, setBelong] = useState(1);
-  const [name, setName] = useState('');
-  const [startDate, setStartDate] = useState(moment());
-  const [endDate, setEndDate] = useState(moment());
-  const [originData, setOriginData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [filteredData, setFilteredData] = useState([]);
-  const [checked, setChecked] = useState(true);
-  const [selectedMember, setSelectedMember] = useState({});
+  const [rowSelection, setRowSelection] = useState<{}>({});
+  // const [headers, setHeaders] = useState<headerType[]>([]);
+  const [belong, setBelong] = useState<number>(1);
+  const [name, setName] = useState<string>('');
+  const [startDate, setStartDate] = useState<any>(moment());
+  const [endDate, setEndDate] = useState<any>(moment());
+  const [originData, setOriginData] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [filteredData, setFilteredData] = useState<filterType[]>([]);
+  const [checked, setChecked] = useState<boolean>(true);
+  const [selectedMember, setSelectedMember] = useState<{}>({});
 
   const areaValue = useAtomValue(areaAtom);
 
-  const columns = useMemo(() => [
+  const headers = [
+    {
+        "label": "ID",
+        "key": "id"
+    },
+    {
+        "label": "일시",
+        "key": "date"
+    },
+    {
+        "label": "소속",
+        "key": "belong"
+    },
+    {
+        "label": "부서",
+        "key": "department"
+    },
+    {
+        "label": "직책",
+        "key": "position"
+    },
+    {
+        "label": "이름",
+        "key": "name"
+    },
+    {
+        "label": "연락처",
+        "key": "phoneNumber"
+    },
+    {
+        "label": "주민번호(등록번호)",
+        "key": "registrationNumber"
+    },
+    {
+        "label": "출근",
+        "key": "startedAt"
+    },
+    {
+        "label": "퇴근",
+        "key": "endedAt"
+    },
+    {
+        "label": "출근 횟수",
+        "key": "workdayCount"
+    }
+]
+
+  const columns = useMemo<MRT_ColumnDef<any>[]>(() => [
     {
       accessorKey: 'id',
       header: 'ID',
@@ -117,7 +166,7 @@ export default function Attendance() {
       header: '연락처',
       size: 120,
       enableClickToCopy: true,
-      Cell: ({ cell }) => (
+      Cell: ({ cell } : any) => (
         <div className="font-bold bg-pink-200">{cell.getValue().substring(0, 9)}****</div>
       ),
       muiTableHeadCellProps: {
@@ -132,7 +181,7 @@ export default function Attendance() {
       header: '주민번호(등록번호)',
       size: 120,
       enableClickToCopy: true,
-      Cell: ({ cell }) => (
+      Cell: ({ cell } : any) => (
         <div className="font-bold text-blue-700">{cell.getValue().substring(0, 8)}******</div>
       ),
       muiTableHeadCellProps: {
@@ -167,12 +216,12 @@ export default function Attendance() {
     // { accessorKey: '3', header: '3', size: 60 },
     // { accessorKey: '4', header: '4', size: 60 },
     // { accessorKey: '5', header: '5', size: 60 },
-  ]);
+  ], []);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleClickOpen = (value) => {
-    const member = originData.filter((data) => data.id == value)[0];
+  const handleClickOpen = (value: any) => {
+    const member : any = originData.filter((data: any) => data.id == value)[0];
 
     setSelectedMember(member);
 
@@ -187,14 +236,14 @@ export default function Attendance() {
     setOpen(false);
   };
 
-  useEffect(() => {
-    setHeaders(
-      columns.map((column) => ({
-        label: column.header,
-        key: column.accessorKey,
-      })),
-    );
-  }, []);
+  // useEffect(() => {
+  //   const header = columns.map((column) => ({
+  //     label: column.header,
+  //     key: column.accessorKey
+  //   }))
+  //   console.log(header)
+    
+  // }, []);
 
   useEffect(() => {
     getTableData();
@@ -221,13 +270,13 @@ export default function Attendance() {
     if (name == '') {
       setFilteredData(
         originData.filter(
-          (data) => moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
+          (data:any) => moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
         ),
       );
     } else {
       setFilteredData(
         originData.filter(
-          (data) =>
+          (data:any) =>
             moment(data.date).isSameOrAfter(start) &&
             moment(data.date).isSameOrBefore(end) &&
             data.name == name,
@@ -241,7 +290,7 @@ export default function Attendance() {
 
     setFilteredData(
       originData.filter(
-        (data) =>
+        (data:any) =>
           moment(data.date).isSameOrAfter(start) &&
           moment(data.date).isSameOrBefore(end) &&
           data.name == name,
@@ -253,10 +302,10 @@ export default function Attendance() {
     getTableData();
   }, []);
 
-  const handleChangeBelong = (event) => {
+  const handleChangeBelong = (event:any) => {
     setBelong(event.target.value);
   };
-  const onClickPeriod = (period) => {
+  const onClickPeriod = (period:any) => {
     const start = moment().subtract(period, 'M');
     const end = moment();
     setStartDate(start);
@@ -266,7 +315,7 @@ export default function Attendance() {
   const getTableData = () => {
     setIsLoading(true);
 
-    let array = [];
+    let array:any[] = [];
     let now = moment();
 
     for (let i = 0; i < 40; i++) {
@@ -311,9 +360,9 @@ export default function Attendance() {
       setRowSelection({});
     }
   };
-  const onClickFaceCheck = (value) => {
-    alert(value);
-  };
+  // const onClickFaceCheck = (value) => {
+  //   alert(value);
+  // };
 
   return (
     <Page>
@@ -355,7 +404,7 @@ export default function Attendance() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 displayEmpty>
-                {originData.map((data) => (
+                {originData.map((data :any) => (
                   <MenuItem key={data.id} value={data.name}>
                     {data.name}
                   </MenuItem>
@@ -437,7 +486,7 @@ export default function Attendance() {
               overflow: 'auto',
             },
           }}
-          getRowId={(row) => row.id} //give each row a more useful id
+          getRowId={(row:any) => row.id} //give each row a more useful id
           onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
           state={{ rowSelection, isLoading: isLoading }} //pass our managed row selection state to the table to use
           muiTableHeadCellProps={{
@@ -471,7 +520,7 @@ export default function Attendance() {
                   variant="outlined">
                   <CSVLink
                     data={table.getRowModel().rows.map((row) => row.original)}
-                    headers={headers}
+                    headers={headers || undefined}
                     filename={'20240907_근태.csv'}>
                     현재 페이지 엑셀다운
                   </CSVLink>
@@ -521,7 +570,7 @@ export default function Attendance() {
           onClick={() => router.back()}>
           이전 페이지로
         </Button>
-        <Dialog
+        {/* <Dialog
           open={open}
           TransitionComponent={Transition}
           keepMounted
@@ -544,7 +593,7 @@ export default function Attendance() {
             <Button onClick={handleClose}>아니오</Button>
             <Button onClick={handleClose}>예</Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </main>
     </Page>
   );

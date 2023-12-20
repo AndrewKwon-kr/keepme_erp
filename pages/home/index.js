@@ -1,6 +1,6 @@
-import Page from '@/app/page';
+import Page from 'app/page';
 import React, { useEffect, useMemo, useState } from 'react';
-import PlusIcon from '@/public/icons/ico_more_line.svg';
+import PlusIcon from 'public/icons/ico_more_line.svg';
 import Image from 'next/image';
 
 import Link from 'next/link';
@@ -48,12 +48,9 @@ export default function Home() {
                   className={
                     'flex items-center justify-between px-5 py-10 odd:border-r ' +
                     (index == 2 ? ' border-y' : index == 3 && ' border-y')
-                  }
-                >
+                  }>
                   <p className="font-medium">{status.title}</p>
-                  <p className="font-semibold text-[#3E56B4]">
-                    {status.number}
-                  </p>
+                  <p className="font-semibold text-[#3E56B4]">{status.number}</p>
                 </div>
               ))}
             </div>

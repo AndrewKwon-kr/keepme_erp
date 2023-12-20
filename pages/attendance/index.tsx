@@ -1,12 +1,12 @@
-import Page from '@/app/page';
+import Page from 'app/page';
 import React, { useEffect, useMemo, useState } from 'react';
-import PlusIcon from '@/public/icons/ico_more_line.svg';
+import PlusIcon from 'public/icons/ico_more_line.svg';
 import Image from 'next/image';
 
 import Link from 'next/link';
 
-import DoughnutChart from '@/components/common/DoughnutChart';
-import BarChart from '@/components/common/BarChart';
+import DoughnutChart from 'components/common/DoughnutChart';
+import BarChart from 'components/common/BarChart';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -17,10 +17,10 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 export default function Attendance() {
-  const [alignment, setAlignment] = useState('time');
-  const [group, setGroup] = useState(0);
+  const [alignment, setAlignment] = useState<string>('time');
+  const [group, setGroup] = useState<number>(0);
 
-  const handleChangeAlignment = (event, newAlignment) => {
+  const handleChangeAlignment = (event: any, newAlignment: any) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
     }
@@ -59,7 +59,7 @@ export default function Attendance() {
         font: {
           weight: 'bold',
         },
-        formatter: (val, ctx) => {
+        formatter: (val: any, ctx: any) => {
           const label = ctx.chart.data.labels[ctx.dataIndex];
 
           return `${label}`;
@@ -68,12 +68,12 @@ export default function Attendance() {
     },
   };
 
-  const [dayList, setDayList] = useState([]);
-  const [timeList, setTimeList] = useState([]);
+  const [dayList, setDayList] = useState<any[]>([]);
+  const [timeList, setTimeList] = useState<any[]>([]);
 
   useEffect(() => {
-    let dayArray = [];
-    let timeArray = [];
+    let dayArray:any[] = [];
+    let timeArray:any[] = [];
 
     for (let i = 0; i < 7; i++) {
       const today = moment();
@@ -136,7 +136,7 @@ export default function Attendance() {
     { department: '노무', allCount: 155, useCount: 100 },
   ];
 
-  const onChangeGroupRunTime = (event) => {
+  const onChangeGroupRunTime = (event:any) => {
     setGroup(event.target.value);
   };
 

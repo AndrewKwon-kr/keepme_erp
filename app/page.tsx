@@ -72,7 +72,11 @@ const user = {
 
 export const areaAtom = atom(0);
 
-export default function Page({ children }) {
+interface AppLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Page({ children } : AppLayoutProps) {
   const pathname = usePathname();
   const [search, setSearch] = useState('');
   const [area, setArea] = useAtom(areaAtom);
@@ -88,7 +92,7 @@ export default function Page({ children }) {
     setRealTime(moment().format('YYYY년 MM월 DD일(dd)'));
   }, 1000);
 
-  const handleClick = (event) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -99,7 +103,7 @@ export default function Page({ children }) {
     router.refresh();
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     setArea(event.target.value);
   };
 
@@ -113,7 +117,7 @@ export default function Page({ children }) {
     }
   }, []);
 
-  const setIcon = (icon) => {
+  const setIcon = (icon: string) => {
     switch (icon) {
       case 'home':
         return <HomeIcon sx={{ fontSize: 18 }} />;
@@ -133,7 +137,7 @@ export default function Page({ children }) {
         return <SettingsIcon sx={{ fontSize: 18 }} />;
     }
   };
-  const onChangeSearch = (e) => {
+  const onChangeSearch = (e : any) => {
     setSearch(e.target.value);
   };
 
@@ -145,30 +149,30 @@ export default function Page({ children }) {
     }
   }, [isHidden]);
 
-  const [darkTheme, setDarkTheme] = useState(undefined);
+  // const [darkTheme, setDarkTheme] = useState(undefined);
 
-  const handleToggle = () => {
-    setDarkTheme(!darkTheme);
-  };
+  // const handleToggle = () => {
+  //   setDarkTheme(!darkTheme);
+  // };
 
-  useEffect(() => {
-    if (darkTheme !== undefined) {
-      if (darkTheme) {
-        document.body.setAttribute('data-theme', 'dark');
-        window.localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.removeAttribute('data-theme');
-        window.localStorage.setItem('theme', 'light');
-      }
-    }
-  }, [darkTheme]);
+  // useEffect(() => {
+  //   if (darkTheme !== undefined) {
+  //     if (darkTheme) {
+  //       document.body.setAttribute('data-theme', 'dark');
+  //       window.localStorage.setItem('theme', 'dark');
+  //     } else {
+  //       document.body.removeAttribute('data-theme');
+  //       window.localStorage.setItem('theme', 'light');
+  //     }
+  //   }
+  // }, [darkTheme]);
 
-  useEffect(() => {
-    const root = window.document.body;
-    const initialColorValue = root.style.getPropertyValue('--initial-color-mode');
+  // useEffect(() => {
+  //   const root = window.document.body;
+  //   const initialColorValue = root.style.getPropertyValue('--initial-color-mode');
 
-    setDarkTheme(initialColorValue === 'dark');
-  }, []);
+  //   setDarkTheme(initialColorValue === 'dark');
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -176,7 +180,7 @@ export default function Page({ children }) {
         <Head>
           <title>
             KeepMe_
-            {menus.filter((menu) => menu.path.split('/')[1] == pathname.split('/')[1])[0]?.name ??
+            {menus.filter((menu) => menu.path.split('/')[1] == pathname?.split('/')[1])[0]?.name ??
               'Main'}
           </title>
         </Head>
@@ -201,7 +205,7 @@ export default function Page({ children }) {
               <div
                 className={
                   'px-5 py-2 flex items-center gap-x-3 text-base rounded-xl duration-150 hover:font-bold hover:scale-110' +
-                  (menu.path.split('/')[1] == pathname.split('/')[1]
+                  (menu.path.split('/')[1] == pathname?.split('/')[1]
                     ? ' bg-[#3E56B4] text-white'
                     : ' bg-[#F2F3F6] text-[#555555]')
                 }>
