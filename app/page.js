@@ -33,6 +33,8 @@ import { useInterval } from 'react-use';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import { useRouter } from 'next/navigation';
+
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
@@ -92,10 +94,24 @@ export default function Page({ children }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    router.refresh();
+  };
 
   const handleChange = (event) => {
     setArea(event.target.value);
   };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    console.log(user);
+    if (!user) {
+      router.push('/login');
+    }
+  }, []);
 
   const setIcon = (icon) => {
     switch (icon) {
@@ -160,7 +176,8 @@ export default function Page({ children }) {
         <Head>
           <title>
             KeepMe_
-            {menus.filter((menu) => menu.path.split('/')[1] == pathname.split('/')[1])[0].name}
+            {menus.filter((menu) => menu.path.split('/')[1] == pathname.split('/')[1])[0]?.name ??
+              'Main'}
           </title>
         </Head>
         <div
@@ -168,7 +185,7 @@ export default function Page({ children }) {
             'pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5 transition ease-in-out delay-150 duration-300' +
             (isNone ? ' hidden' : isHidden && ' opacity-0 -translate-x-full')
           }>
-          <div
+          {/* <div
             className={
               'w-[210px] h-10 px-5 py-5 flex items-center justify-center transition ease-in duration-300 cursor-pointer rounded-md' +
               (darkTheme ? ' bg-slate-500' : ' bg-slate-100')
@@ -178,7 +195,7 @@ export default function Page({ children }) {
               {darkTheme ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
             {darkTheme ? '다크모드' : '일반모드'}
-          </div>
+          </div> */}
           {menus.map((menu) => (
             <Link href={menu.path} key={menu.name}>
               <div
@@ -250,7 +267,7 @@ export default function Page({ children }) {
                       'aria-labelledby': 'basic-button',
                     }}>
                     <MenuItem onClick={handleClose}>프로필</MenuItem>
-                    <MenuItem onClick={handleClose}>로그아웃</MenuItem>
+                    <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
                   </Menu>
                 </div>
               </div>
