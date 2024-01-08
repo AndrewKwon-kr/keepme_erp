@@ -76,7 +76,7 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-export default function Page({ children } : AppLayoutProps) {
+export default function Page({ children }: AppLayoutProps) {
   const pathname = usePathname();
   const [search, setSearch] = useState('');
   const [area, setArea] = useAtom(areaAtom);
@@ -137,7 +137,7 @@ export default function Page({ children } : AppLayoutProps) {
         return <SettingsIcon sx={{ fontSize: 18 }} />;
     }
   };
-  const onChangeSearch = (e : any) => {
+  const onChangeSearch = (e: any) => {
     setSearch(e.target.value);
   };
 

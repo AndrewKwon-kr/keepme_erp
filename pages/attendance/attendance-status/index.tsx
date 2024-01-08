@@ -1,31 +1,24 @@
-import Page from 'app/page';
-import React, { useEffect, useMemo, useState } from 'react';
-import { MRT_ColumnDef, MaterialReactTable } from 'material-react-table';
-import { CSVLink } from 'react-csv';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { Button } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
-
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Page, { areaAtom } from 'app/page';
 import { useAtomValue } from 'jotai';
-import { areaAtom } from 'app/page';
+import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import React, { useEffect, useMemo, useState } from 'react';
+import { CSVLink } from 'react-csv';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import { LabelKeyObject } from 'react-csv/lib/core';
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //   return <Slide direction="up" ref={ref} {...props} />;
 // });
@@ -49,192 +42,195 @@ export default function Attendance() {
 
   const headers = [
     {
-        "label": "ID",
-        "key": "id"
+      label: 'ID',
+      key: 'id',
     },
     {
-        "label": "일시",
-        "key": "date"
+      label: '일시',
+      key: 'date',
     },
     {
-        "label": "소속",
-        "key": "belong"
+      label: '소속',
+      key: 'belong',
     },
     {
-        "label": "부서",
-        "key": "department"
+      label: '부서',
+      key: 'department',
     },
     {
-        "label": "직책",
-        "key": "position"
+      label: '직책',
+      key: 'position',
     },
     {
-        "label": "이름",
-        "key": "name"
+      label: '이름',
+      key: 'name',
     },
     {
-        "label": "연락처",
-        "key": "phoneNumber"
+      label: '연락처',
+      key: 'phoneNumber',
     },
     {
-        "label": "주민번호(등록번호)",
-        "key": "registrationNumber"
+      label: '주민번호(등록번호)',
+      key: 'registrationNumber',
     },
     {
-        "label": "출근",
-        "key": "startedAt"
+      label: '출근',
+      key: 'startedAt',
     },
     {
-        "label": "퇴근",
-        "key": "endedAt"
+      label: '퇴근',
+      key: 'endedAt',
     },
     {
-        "label": "출근 횟수",
-        "key": "workdayCount"
-    }
-]
+      label: '출근 횟수',
+      key: 'workdayCount',
+    },
+  ];
 
-  const columns = useMemo<MRT_ColumnDef<any>[]>(() => [
-    {
-      accessorKey: 'id',
-      header: 'ID',
-      size: 20,
-      muiTableHeadCellProps: {
-        align: 'center',
+  const columns = useMemo<MRT_ColumnDef<any>[]>(
+    () => [
+      {
+        accessorKey: 'id',
+        header: 'ID',
+        size: 20,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-      muiTableBodyCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'date',
+        header: '일시',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-    },
-    {
-      accessorKey: 'date',
-      header: '일시',
-      size: 80,
-      muiTableHeadCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'belong',
+        header: '소속',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-      muiTableBodyCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'department',
+        header: '부서',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-    },
-    {
-      accessorKey: 'belong',
-      header: '소속',
-      size: 80,
-      muiTableHeadCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'position',
+        header: '직책',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-      muiTableBodyCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'name',
+        header: '이름',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-    },
-    {
-      accessorKey: 'department',
-      header: '부서',
-      size: 80,
-      muiTableHeadCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'phoneNumber',
+        header: '연락처',
+        size: 120,
+        enableClickToCopy: true,
+        Cell: ({ cell }: any) => (
+          <div className="font-bold bg-pink-200">{cell.getValue().substring(0, 9)}****</div>
+        ),
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-      muiTableBodyCellProps: {
-        align: 'center',
+      {
+        accessorKey: 'registrationNumber',
+        header: '주민번호(등록번호)',
+        size: 120,
+        enableClickToCopy: true,
+        Cell: ({ cell }: any) => (
+          <div className="font-bold text-blue-700">{cell.getValue().substring(0, 8)}******</div>
+        ),
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
-    },
-    {
-      accessorKey: 'position',
-      header: '직책',
-      size: 80,
-      muiTableHeadCellProps: {
-        align: 'center',
-      },
-      muiTableBodyCellProps: {
-        align: 'center',
-      },
-    },
-    {
-      accessorKey: 'name',
-      header: '이름',
-      size: 80,
-      muiTableHeadCellProps: {
-        align: 'center',
-      },
-      muiTableBodyCellProps: {
-        align: 'center',
-      },
-    },
-    {
-      accessorKey: 'phoneNumber',
-      header: '연락처',
-      size: 120,
-      enableClickToCopy: true,
-      Cell: ({ cell } : any) => (
-        <div className="font-bold bg-pink-200">{cell.getValue().substring(0, 9)}****</div>
-      ),
-      muiTableHeadCellProps: {
-        align: 'center',
-      },
-      muiTableBodyCellProps: {
-        align: 'center',
-      },
-    },
-    {
-      accessorKey: 'registrationNumber',
-      header: '주민번호(등록번호)',
-      size: 120,
-      enableClickToCopy: true,
-      Cell: ({ cell } : any) => (
-        <div className="font-bold text-blue-700">{cell.getValue().substring(0, 8)}******</div>
-      ),
-      muiTableHeadCellProps: {
-        align: 'center',
-      },
-      muiTableBodyCellProps: {
-        align: 'center',
-      },
-    },
-    { accessorKey: 'startedAt', header: '출근', size: 60 },
-    { accessorKey: 'endedAt', header: '퇴근', size: 60 },
-    { accessorKey: 'workdayCount', header: '출근 횟수', size: 60 },
-    // {
-    //   accessorKey: '1',
-    //   header: '사진 비교',
-    //   size: 60,
-    //   Cell: ({ cell }) => (
-    //     <div
-    //       className="font-bold text-blue-700 underline cursor-pointer"
-    //       onClick={() => handleClickOpen(cell.getValue())}>
-    //       확인
-    //     </div>
-    //   ),
-    //   muiTableHeadCellProps: {
-    //     align: 'center',
-    //   },
-    //   muiTableBodyCellProps: {
-    //     align: 'center',
-    //   },
-    // },
-    // { accessorKey: '2', header: '2', size: 60 },
-    // { accessorKey: '3', header: '3', size: 60 },
-    // { accessorKey: '4', header: '4', size: 60 },
-    // { accessorKey: '5', header: '5', size: 60 },
-  ], []);
+      { accessorKey: 'startedAt', header: '출근', size: 60 },
+      { accessorKey: 'endedAt', header: '퇴근', size: 60 },
+      { accessorKey: 'workdayCount', header: '출근 횟수', size: 60 },
+      // {
+      //   accessorKey: '1',
+      //   header: '사진 비교',
+      //   size: 60,
+      //   Cell: ({ cell }) => (
+      //     <div
+      //       className="font-bold text-blue-700 underline cursor-pointer"
+      //       onClick={() => handleClickOpen(cell.getValue())}>
+      //       확인
+      //     </div>
+      //   ),
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
+      // { accessorKey: '2', header: '2', size: 60 },
+      // { accessorKey: '3', header: '3', size: 60 },
+      // { accessorKey: '4', header: '4', size: 60 },
+      // { accessorKey: '5', header: '5', size: 60 },
+    ],
+    [],
+  );
 
-  const [open, setOpen] = useState<boolean>(false);
+  // const [open, setOpen] = useState<boolean>(false);
 
-  const handleClickOpen = (value: any) => {
-    const member : any = originData.filter((data: any) => data.id == value)[0];
+  // const handleClickOpen = (value: any) => {
+  //   const member: any = originData.filter((data: any) => data.id == value)[0];
 
-    setSelectedMember(member);
+  //   setSelectedMember(member);
 
-    if (member.todayImageUrl) {
-      setOpen(true);
-    } else {
-      alert('아직 출근 전입니다.');
-    }
-  };
+  //   if (member.todayImageUrl) {
+  //     setOpen(true);
+  //   } else {
+  //     alert('아직 출근 전입니다.');
+  //   }
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   // useEffect(() => {
   //   const header = columns.map((column) => ({
@@ -242,7 +238,7 @@ export default function Attendance() {
   //     key: column.accessorKey
   //   }))
   //   console.log(header)
-    
+
   // }, []);
 
   useEffect(() => {
@@ -270,13 +266,14 @@ export default function Attendance() {
     if (name == '') {
       setFilteredData(
         originData.filter(
-          (data:any) => moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
+          (data: any) =>
+            moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
         ),
       );
     } else {
       setFilteredData(
         originData.filter(
-          (data:any) =>
+          (data: any) =>
             moment(data.date).isSameOrAfter(start) &&
             moment(data.date).isSameOrBefore(end) &&
             data.name == name,
@@ -290,7 +287,7 @@ export default function Attendance() {
 
     setFilteredData(
       originData.filter(
-        (data:any) =>
+        (data: any) =>
           moment(data.date).isSameOrAfter(start) &&
           moment(data.date).isSameOrBefore(end) &&
           data.name == name,
@@ -302,10 +299,10 @@ export default function Attendance() {
     getTableData();
   }, []);
 
-  const handleChangeBelong = (event:any) => {
+  const handleChangeBelong = (event: any) => {
     setBelong(event.target.value);
   };
-  const onClickPeriod = (period:any) => {
+  const onClickPeriod = (period: any) => {
     const start = moment().subtract(period, 'M');
     const end = moment();
     setStartDate(start);
@@ -315,7 +312,7 @@ export default function Attendance() {
   const getTableData = () => {
     setIsLoading(true);
 
-    let array:any[] = [];
+    let array: any[] = [];
     let now = moment();
 
     for (let i = 0; i < 40; i++) {
@@ -360,9 +357,15 @@ export default function Attendance() {
       setRowSelection({});
     }
   };
-  // const onClickFaceCheck = (value) => {
-  //   alert(value);
-  // };
+
+  const onChangeInputName = (e: any, value: any) => {
+    if (value !== '' && value !== null) {
+      setChecked(false);
+      setFilteredData(originData.filter((data: any) => data.name == value));
+    } else {
+      setChecked(true);
+    }
+  };
 
   return (
     <Page>
@@ -372,7 +375,7 @@ export default function Attendance() {
             <div className="">소속</div>
             <FormControl>
               <Select
-                className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
+                className="ml-[30px] h-[56px] min-w-[250px] active:outline-none"
                 value={belong}
                 onChange={handleChangeBelong}
                 displayEmpty>
@@ -386,7 +389,7 @@ export default function Attendance() {
             <div className="">부서</div>
             <FormControl>
               <Select
-                className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
+                className="ml-[30px] h-[56px] min-w-[250px] active:outline-none"
                 value={belong}
                 onChange={handleChangeBelong}
                 displayEmpty>
@@ -398,22 +401,27 @@ export default function Attendance() {
           </div>
           <div className="text-[#7A7F94] text-base flex items-center">
             <div className="">이름</div>
-            <FormControl>
+            <Autocomplete
+              className="ml-[30px] active:outline-none"
+              disablePortal
+              options={originData.map((data: any) => data.name)}
+              sx={{ width: 250 }}
+              onChange={(e, value) => onChangeInputName(e, value)}
+              renderInput={(params) => <TextField sx={{ width: 250 }} {...params} />}
+            />
+            {/* <FormControl>
               <Select
-                className="ml-[30px] h-[34px] min-w-[250px] active:outline-none"
+                className="ml-[30px] h-[56px] min-w-[250px] active:outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 displayEmpty>
-                {originData.map((data :any) => (
+                {originData.map((data: any) => (
                   <MenuItem key={data.id} value={data.name}>
                     {data.name}
                   </MenuItem>
                 ))}
-                {/* <MenuItem value={0}>부산 가야현장</MenuItem>
-                <MenuItem value={1}>부산 다대포현장</MenuItem>
-                <MenuItem value={2}>김해 장유현장</MenuItem> */}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </div>
         </div>
         <div className="my-5 flex items-center">
@@ -486,7 +494,7 @@ export default function Attendance() {
               overflow: 'auto',
             },
           }}
-          getRowId={(row:any) => row.id} //give each row a more useful id
+          getRowId={(row: any) => row.id} //give each row a more useful id
           onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
           state={{ rowSelection, isLoading: isLoading }} //pass our managed row selection state to the table to use
           muiTableHeadCellProps={{

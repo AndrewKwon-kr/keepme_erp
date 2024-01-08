@@ -1,20 +1,18 @@
-import Page from 'app/page';
-import React, { useEffect, useMemo, useState } from 'react';
-import PlusIcon from 'public/icons/ico_more_line.svg';
-import Image from 'next/image';
-
-import Link from 'next/link';
-
-import DoughnutChart from 'components/common/DoughnutChart';
-import BarChart from 'components/common/BarChart';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from 'moment';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Button } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Page from 'app/page';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import BarChart from 'components/common/BarChart';
+import DoughnutChart from 'components/common/DoughnutChart';
+import moment from 'moment';
+import Image from 'next/image';
+import Link from 'next/link';
+import PlusIcon from 'public/icons/ico_more_line.svg';
+import React, { useEffect, useMemo, useState } from 'react';
 
 export default function Attendance() {
   const [alignment, setAlignment] = useState<string>('time');
@@ -72,8 +70,8 @@ export default function Attendance() {
   const [timeList, setTimeList] = useState<any[]>([]);
 
   useEffect(() => {
-    let dayArray:any[] = [];
-    let timeArray:any[] = [];
+    let dayArray: any[] = [];
+    let timeArray: any[] = [];
 
     for (let i = 0; i < 7; i++) {
       const today = moment();
@@ -136,7 +134,7 @@ export default function Attendance() {
     { department: '노무', allCount: 155, useCount: 100 },
   ];
 
-  const onChangeGroupRunTime = (event:any) => {
+  const onChangeGroupRunTime = (event: any) => {
     setGroup(event.target.value);
   };
 
