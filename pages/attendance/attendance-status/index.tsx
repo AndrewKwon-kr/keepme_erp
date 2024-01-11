@@ -1,7 +1,7 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -18,25 +18,42 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { TransitionProps } from '@mui/material/transitions';
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 type filterType = {};
+interface AutocompleteItem {
+  id: number;
+  name: string;
+}
 
 export default function Attendance() {
   const router = useRouter();
   const [rowSelection, setRowSelection] = useState<{}>({});
   // const [headers, setHeaders] = useState<headerType[]>([]);
-  const [belong, setBelong] = useState<number>(1);
+  const [belong, setBelong] = useState<string>('');
+  const [department, setDepartment] = useState<string>('');
+  const [departmentItems, setDepartmentItems] = useState<any>([]);
   const [name, setName] = useState<string>('');
+  const [selectedName, setSelectedName] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<any>(moment());
   const [endDate, setEndDate] = useState<any>(moment());
   const [originData, setOriginData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filteredData, setFilteredData] = useState<filterType[]>([]);
   const [checked, setChecked] = useState<boolean>(true);
-  const [selectedMember, setSelectedMember] = useState<{}>({});
+  const [selectedMember, setSelectedMember] = useState<{
+    name: '';
+    originImageUrl: '';
+    todayImageUrl: '';
+  }>({ name: '', originImageUrl: '', todayImageUrl: '' });
 
   const areaValue = useAtomValue(areaAtom);
 
@@ -188,49 +205,45 @@ export default function Attendance() {
       { accessorKey: 'startedAt', header: '출근', size: 60 },
       { accessorKey: 'endedAt', header: '퇴근', size: 60 },
       { accessorKey: 'workdayCount', header: '출근 횟수', size: 60 },
-      // {
-      //   accessorKey: '1',
-      //   header: '사진 비교',
-      //   size: 60,
-      //   Cell: ({ cell }) => (
-      //     <div
-      //       className="font-bold text-blue-700 underline cursor-pointer"
-      //       onClick={() => handleClickOpen(cell.getValue())}>
-      //       확인
-      //     </div>
-      //   ),
-      //   muiTableHeadCellProps: {
-      //     align: 'center',
-      //   },
-      //   muiTableBodyCellProps: {
-      //     align: 'center',
-      //   },
-      // },
-      // { accessorKey: '2', header: '2', size: 60 },
-      // { accessorKey: '3', header: '3', size: 60 },
-      // { accessorKey: '4', header: '4', size: 60 },
-      // { accessorKey: '5', header: '5', size: 60 },
+      {
+        accessorKey: '1',
+        header: '사진 비교',
+        size: 60,
+        Cell: ({ cell }) => (
+          <div
+            className="font-bold text-blue-700 underline cursor-pointer"
+            onClick={() => handleClickOpen(cell.getValue())}>
+            확인
+          </div>
+        ),
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
+      },
     ],
     [],
   );
 
-  // const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [options, setOptions] = useState<any>([]);
 
-  // const handleClickOpen = (value: any) => {
-  //   const member: any = originData.filter((data: any) => data.id == value)[0];
+  const handleClickOpen = (value: any) => {
+    const member: any = originData.filter((data: any) => data.id == value)[0];
+    setSelectedMember(member);
 
-  //   setSelectedMember(member);
+    if (member.todayImageUrl) {
+      setOpen(true);
+    } else {
+      alert('아직 출근 전입니다.');
+    }
+  };
 
-  //   if (member.todayImageUrl) {
-  //     setOpen(true);
-  //   } else {
-  //     alert('아직 출근 전입니다.');
-  //   }
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // useEffect(() => {
   //   const header = columns.map((column) => ({
@@ -281,6 +294,7 @@ export default function Attendance() {
       );
     }
   }, [startDate, endDate]);
+
   useEffect(() => {
     const start = startDate.startOf('day');
     const end = endDate.endOf('day');
@@ -302,6 +316,26 @@ export default function Attendance() {
   const handleChangeBelong = (event: any) => {
     setBelong(event.target.value);
   };
+
+  const handleChangeDepartment = (event: any) => {
+    const value = event.target.value;
+    setDepartment(value);
+
+    if (value === '') {
+      setChecked(true);
+      setSelectedName(null);
+    } else {
+      if (selectedName !== null) {
+        setFilteredData(
+          originData.filter((data: any) => data.name == selectedName && data.department == value),
+        );
+      } else {
+        setFilteredData(originData.filter((data: any) => data.department == value));
+      }
+      setChecked(false);
+    }
+  };
+
   const onClickPeriod = (period: any) => {
     const start = moment().subtract(period, 'M');
     const end = moment();
@@ -320,11 +354,11 @@ export default function Attendance() {
         id: i,
         date: now.subtract(1, 'day').format('YYYY-MM-DD'),
         belong: '강남건설',
-        department: '골조',
-        position: i < 10 ? '사원' : i < 20 ? '주임' : i < 30 ? '대리' : '과장',
-        name: '강민수' + i,
-        phoneNumber: '010-1234-5678',
-        registrationNumber: '780102-1122338',
+        department: i < 7 ? '개발' : '연구',
+        position: i < 7 ? '팀장' : '연구원',
+        name: i < 7 ? '강민수' : '권혁진',
+        phoneNumber: i < 7 ? '010-1234-5678' : '010-2628-0813',
+        registrationNumber: i < 7 ? '780102-1122338' : '900813-1698374',
         startedAt: '08:00',
         endedAt: '17:00',
         1: i,
@@ -338,9 +372,14 @@ export default function Attendance() {
       };
     }
     try {
+      const nameArray = [...new Map(array.map((val: any) => [val.name, val])).values()];
+      const departmentArray = [...new Map(array.map((val: any) => [val.department, val])).values()];
+
       setTimeout(() => {
+        setDepartmentItems(departmentArray);
         setOriginData(array);
         setFilteredData(array);
+        setOptions(nameArray);
         setIsLoading(false);
       }, 2000);
     } finally {
@@ -359,11 +398,21 @@ export default function Attendance() {
   };
 
   const onChangeInputName = (e: any, value: any) => {
-    if (value !== '' && value !== null) {
+    setSelectedName(value);
+
+    if (value !== '' && value !== null && department == '') {
       setChecked(false);
-      setFilteredData(originData.filter((data: any) => data.name == value));
+      setFilteredData(originData.filter((data: any) => data.name == value.name));
+    } else if (value !== '' && value !== null && department != '') {
+      setFilteredData(
+        originData.filter((data: any) => data.name == value.name && data.department == department),
+      );
     } else {
-      setChecked(true);
+      if (department) {
+        setFilteredData(originData.filter((data: any) => data.department == department));
+      } else {
+        setChecked(true);
+      }
     }
   };
 
@@ -371,7 +420,7 @@ export default function Attendance() {
     <Page>
       <main className="p-5 w-full overflow-x-auto whitespace-nowrap">
         <div className="flex items-center gap-x-10">
-          <div className="text-[#7A7F94] text-base flex items-center ">
+          {/* <div className="text-[#7A7F94] text-base flex items-center ">
             <div className="">소속</div>
             <FormControl>
               <Select
@@ -379,23 +428,28 @@ export default function Attendance() {
                 value={belong}
                 onChange={handleChangeBelong}
                 displayEmpty>
-                <MenuItem value={0}>부산 가야현장</MenuItem>
-                <MenuItem value={1}>부산 다대포현장</MenuItem>
-                <MenuItem value={2}>김해 장유현장</MenuItem>
+                {originData.map((data: any) => {
+                  return <MenuItem value={data.department}>{data.department}</MenuItem>;
+                })}
               </Select>
             </FormControl>
-          </div>
+          </div> */}
           <div className="text-[#7A7F94] text-base flex items-center">
             <div className="">부서</div>
             <FormControl>
               <Select
                 className="ml-[30px] h-[56px] min-w-[250px] active:outline-none"
-                value={belong}
-                onChange={handleChangeBelong}
+                value={department}
+                onChange={handleChangeDepartment}
                 displayEmpty>
-                <MenuItem value={0}>골조</MenuItem>
-                <MenuItem value={1}>콘크리트</MenuItem>
-                <MenuItem value={2}>크레인</MenuItem>
+                <MenuItem value={''}>-</MenuItem>
+                {departmentItems.map((data: any) => {
+                  return (
+                    <MenuItem key={data.department} value={data.department}>
+                      {data.department}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </div>
@@ -404,24 +458,21 @@ export default function Attendance() {
             <Autocomplete
               className="ml-[30px] active:outline-none"
               disablePortal
-              options={originData.map((data: any) => data.name)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              options={options.map((option: any) => {
+                return { id: option.id, name: option.name };
+              })}
+              getOptionLabel={(option: any) => option.name || ''}
+              renderOption={(props, option: any) => (
+                <li {...props} key={option.id}>
+                  {option.name}
+                </li>
+              )}
               sx={{ width: 250 }}
               onChange={(e, value) => onChangeInputName(e, value)}
+              value={selectedName}
               renderInput={(params) => <TextField sx={{ width: 250 }} {...params} />}
             />
-            {/* <FormControl>
-              <Select
-                className="ml-[30px] h-[56px] min-w-[250px] active:outline-none"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                displayEmpty>
-                {originData.map((data: any) => (
-                  <MenuItem key={data.id} value={data.name}>
-                    {data.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl> */}
           </div>
         </div>
         <div className="my-5 flex items-center">
@@ -578,7 +629,7 @@ export default function Attendance() {
           onClick={() => router.back()}>
           이전 페이지로
         </Button>
-        {/* <Dialog
+        <Dialog
           open={open}
           TransitionComponent={Transition}
           keepMounted
@@ -601,7 +652,7 @@ export default function Attendance() {
             <Button onClick={handleClose}>아니오</Button>
             <Button onClick={handleClose}>예</Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
       </main>
     </Page>
   );

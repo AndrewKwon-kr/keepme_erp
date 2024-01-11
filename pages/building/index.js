@@ -31,7 +31,7 @@ export default function Building() {
               </Button>
               <div
                 className="w-5 h-5 absolute top-[580px] left-[420px] rounded-full bg-blue-500"
-                onClick={() => console.log('!!!')}></div>
+                onClick={() => console.log('!!')}></div>
               <div
                 className="w-5 h-5 absolute top-[580px] bg-blue-500 left-[420px] rounded-full animate-ping"
                 onClick={() => console.log('!!!')}></div>
