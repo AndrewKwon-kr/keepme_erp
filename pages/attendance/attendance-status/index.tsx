@@ -19,20 +19,21 @@ import { CSVLink } from 'react-csv';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { TransitionProps } from '@mui/material/transitions';
+import { getToken, postData, setAuthToken } from '../../../api';
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-type filterType = {};
-interface AutocompleteItem {
-  id: number;
-  name: string;
-}
+// const Transition = React.forwardRef(function Transition(
+//   props: TransitionProps & {
+//     children: React.ReactElement<any, any>;
+//   },
+//   ref: React.Ref<unknown>,
+// ) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
+// type filterType = {};
+// interface AutocompleteItem {
+//   id: number;
+//   name: string;
+// }
 
 export default function Attendance() {
   const router = useRouter();
@@ -41,73 +42,74 @@ export default function Attendance() {
   const [belong, setBelong] = useState<string>('');
   const [department, setDepartment] = useState<string>('');
   const [departmentItems, setDepartmentItems] = useState<any>([]);
-  const [name, setName] = useState<string>('');
+  // const [name, setName] = useState<string>('');
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<any>(moment());
   const [endDate, setEndDate] = useState<any>(moment());
   const [originData, setOriginData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filteredData, setFilteredData] = useState<filterType[]>([]);
-  const [checked, setChecked] = useState<boolean>(true);
-  const [selectedMember, setSelectedMember] = useState<{
-    name: '';
-    originImageUrl: '';
-    todayImageUrl: '';
-  }>({ name: '', originImageUrl: '', todayImageUrl: '' });
+  const [checked, setChecked] = useState<boolean>(false);
+  const [options, setOptions] = useState<any>([]);
+
+  // const [selectedMember, setSelectedMember] = useState<{
+  //   name: '';
+  //   originImageUrl: '';
+  //   todayImageUrl: '';
+  // }>({ name: '', originImageUrl: '', todayImageUrl: '' });
 
   const areaValue = useAtomValue(areaAtom);
 
   const headers = [
     {
       label: 'ID',
-      key: 'id',
+      key: 'userID',
     },
     {
       label: '일시',
-      key: 'date',
+      key: 'workDate',
     },
-    {
-      label: '소속',
-      key: 'belong',
-    },
-    {
-      label: '부서',
-      key: 'department',
-    },
-    {
-      label: '직책',
-      key: 'position',
-    },
+    // {
+    //   label: '소속',
+    //   key: 'belong',
+    // },
+    // {
+    //   label: '부서',
+    //   key: 'department',
+    // },
+    // {
+    //   label: '직책',
+    //   key: 'position',
+    // },
     {
       label: '이름',
-      key: 'name',
+      key: 'userName',
     },
-    {
-      label: '연락처',
-      key: 'phoneNumber',
-    },
-    {
-      label: '주민번호(등록번호)',
-      key: 'registrationNumber',
-    },
+    // {
+    //   label: '연락처',
+    //   key: 'phoneNumber',
+    // },
+    // {
+    //   label: '주민번호(등록번호)',
+    //   key: 'registrationNumber',
+    // },
     {
       label: '출근',
-      key: 'startedAt',
+      key: 'firstInTime',
     },
     {
       label: '퇴근',
-      key: 'endedAt',
+      key: 'lastOutTime',
     },
     {
-      label: '출근 횟수',
-      key: 'workdayCount',
+      label: '상태',
+      key: 'status',
     },
   ];
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
-        accessorKey: 'id',
+        accessorKey: 'userId',
         header: 'ID',
         size: 20,
         muiTableHeadCellProps: {
@@ -118,7 +120,7 @@ export default function Attendance() {
         },
       },
       {
-        accessorKey: 'date',
+        accessorKey: 'workDate',
         header: '일시',
         size: 80,
         muiTableHeadCellProps: {
@@ -127,42 +129,43 @@ export default function Attendance() {
         muiTableBodyCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }: any) => <div>{moment(cell.getValue()).format('YYYY-MM-DD')}</div>,
       },
+      // {
+      //   accessorKey: 'belong',
+      //   header: '소속',
+      //   size: 80,
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
+      // {
+      //   accessorKey: 'department',
+      //   header: '부서',
+      //   size: 80,
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
+      // {
+      //   accessorKey: 'position',
+      //   header: '직책',
+      //   size: 80,
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
       {
-        accessorKey: 'belong',
-        header: '소속',
-        size: 80,
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
-      },
-      {
-        accessorKey: 'department',
-        header: '부서',
-        size: 80,
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
-      },
-      {
-        accessorKey: 'position',
-        header: '직책',
-        size: 80,
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
-      },
-      {
-        accessorKey: 'name',
+        accessorKey: 'userName',
         header: '이름',
         size: 80,
         muiTableHeadCellProps: {
@@ -172,78 +175,97 @@ export default function Attendance() {
           align: 'center',
         },
       },
+      // {
+      //   accessorKey: 'phoneNumber',
+      //   header: '연락처',
+      //   size: 120,
+      //   enableClickToCopy: true,
+      //   Cell: ({ cell }: any) => (
+      //     <div className="font-bold bg-pink-200">{cell.getValue().substring(0, 9)}****</div>
+      //   ),
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
+      // {
+      //   accessorKey: 'registrationNumber',
+      //   header: '주민번호(등록번호)',
+      //   size: 120,
+      //   enableClickToCopy: true,
+      //   Cell: ({ cell }: any) => (
+      //     <div className="font-bold text-blue-700">{cell.getValue().substring(0, 8)}******</div>
+      //   ),
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
       {
-        accessorKey: 'phoneNumber',
-        header: '연락처',
-        size: 120,
-        enableClickToCopy: true,
-        Cell: ({ cell }: any) => (
-          <div className="font-bold bg-pink-200">{cell.getValue().substring(0, 9)}****</div>
-        ),
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
-      },
-      {
-        accessorKey: 'registrationNumber',
-        header: '주민번호(등록번호)',
-        size: 120,
-        enableClickToCopy: true,
-        Cell: ({ cell }: any) => (
-          <div className="font-bold text-blue-700">{cell.getValue().substring(0, 8)}******</div>
-        ),
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
-      },
-      { accessorKey: 'startedAt', header: '출근', size: 60 },
-      { accessorKey: 'endedAt', header: '퇴근', size: 60 },
-      { accessorKey: 'workdayCount', header: '출근 횟수', size: 60 },
-      {
-        accessorKey: '1',
-        header: '사진 비교',
+        accessorKey: 'firstInTime',
+        header: '출근',
         size: 60,
-        Cell: ({ cell }) => (
-          <div
-            className="font-bold text-blue-700 underline cursor-pointer"
-            onClick={() => handleClickOpen(cell.getValue())}>
-            확인
-          </div>
+        Cell: ({ cell }: any) => (
+          <div>{cell.getValue() ? moment(cell.getValue()).format('HH:mm') : ''}</div>
         ),
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
       },
+      {
+        accessorKey: 'lastOutTime',
+        header: '퇴근',
+        size: 60,
+        Cell: ({ cell }: any) => (
+          <div>{cell.getValue() ? moment(cell.getValue()).format('HH:mm') : ''}</div>
+        ),
+      },
+      { accessorKey: 'status', header: '상태', size: 60 },
+      // {
+      //   accessorKey: '1',
+      //   header: '사진 비교',
+      //   size: 60,
+      //   Cell: ({ cell }) => (
+      //     <div
+      //       className="font-bold text-blue-700 underline cursor-pointer"
+      //       onClick={() => handleClickOpen(cell.getValue())}>
+      //       확인
+      //     </div>
+      //   ),
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
     ],
     [],
   );
 
-  const [open, setOpen] = useState<boolean>(false);
-  const [options, setOptions] = useState<any>([]);
+  // const [open, setOpen] = useState<boolean>(false);
 
-  const handleClickOpen = (value: any) => {
-    const member: any = originData.filter((data: any) => data.id == value)[0];
-    setSelectedMember(member);
+  // const handleClickOpen = (value: any) => {
+  //   const member = originData.filter((data: any) => data.id == value)[0];
+  //   console.log(originData);
 
-    if (member.todayImageUrl) {
-      setOpen(true);
-    } else {
-      alert('아직 출근 전입니다.');
-    }
-  };
+  //   if (member) {
+  //     setSelectedMember(member);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  //     if (member.todayImageUrl) {
+  //       setOpen(true);
+  //     } else {
+  //       alert('아직 출근 전입니다.');
+  //     }
+  //   } else {
+  //     console.log(originData);
+  //   }
+  // };
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   // useEffect(() => {
   //   const header = columns.map((column) => ({
@@ -255,14 +277,20 @@ export default function Attendance() {
   // }, []);
 
   useEffect(() => {
-    getTableData();
+    const body = {
+      userName: selectedName ?? '',
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+    };
+    console.log(2);
+    getTableData(body);
     initState();
   }, [areaValue]);
 
   const initState = () => {
-    setStartDate(moment());
+    setStartDate(moment().subtract(1, 'M'));
     setEndDate(moment());
-    setChecked(true);
+    setChecked(false);
   };
 
   useEffect(() => {
@@ -271,47 +299,54 @@ export default function Attendance() {
   }, [rowSelection]);
 
   useEffect(() => {
+    console.log(3);
+    const body = {
+      userName: selectedName ?? '',
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+    };
+    getTableData(body);
+
     console.log('start : ', startDate.format('YYYY-MM-DD'));
     console.log('end : ', endDate.format('YYYY-MM-DD'));
-    const start = startDate.startOf('day');
-    const end = endDate.endOf('day');
+    // const start = startDate.startOf('day');
+    // const end = endDate.endOf('day');
 
-    if (name == '') {
-      setFilteredData(
-        originData.filter(
-          (data: any) =>
-            moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
-        ),
-      );
-    } else {
-      setFilteredData(
-        originData.filter(
-          (data: any) =>
-            moment(data.date).isSameOrAfter(start) &&
-            moment(data.date).isSameOrBefore(end) &&
-            data.name == name,
-        ),
-      );
-    }
+    // if (name == '') {
+    //   setFilteredData(
+    //     originData.filter(
+    //       (data: any) =>
+    //         moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
+    //     ),
+    //   );
+    // } else {
+    //   setFilteredData(
+    //     originData.filter(
+    //       (data: any) =>
+    //         moment(data.date).isSameOrAfter(start) &&
+    //         moment(data.date).isSameOrBefore(end) &&
+    //         data.name == name,
+    //     ),
+    //   );
+    // }
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    const start = startDate.startOf('day');
-    const end = endDate.endOf('day');
+  // useEffect(() => {
+  //   console.log(4);
+  //   getTableData();
 
-    setFilteredData(
-      originData.filter(
-        (data: any) =>
-          moment(data.date).isSameOrAfter(start) &&
-          moment(data.date).isSameOrBefore(end) &&
-          data.name == name,
-      ),
-    );
-  }, [name]);
+  //   // const start = startDate.startOf('day');
+  //   // const end = endDate.endOf('day');
 
-  useEffect(() => {
-    getTableData();
-  }, []);
+  //   // setFilteredData(
+  //   //   originData.filter(
+  //   //     (data: any) =>
+  //   //       moment(data.date).isSameOrAfter(start) &&
+  //   //       moment(data.date).isSameOrBefore(end) &&
+  //   //       data.name == name,
+  //   //   ),
+  //   // );
+  // }, [name]);
 
   const handleChangeBelong = (event: any) => {
     setBelong(event.target.value);
@@ -320,20 +355,24 @@ export default function Attendance() {
   const handleChangeDepartment = (event: any) => {
     const value = event.target.value;
     setDepartment(value);
-
-    if (value === '') {
-      setChecked(true);
-      setSelectedName(null);
-    } else {
-      if (selectedName !== null) {
-        setFilteredData(
-          originData.filter((data: any) => data.name == selectedName && data.department == value),
-        );
-      } else {
-        setFilteredData(originData.filter((data: any) => data.department == value));
-      }
-      setChecked(false);
-    }
+    const body = {
+      userName: selectedName ?? '',
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+    };
+    getTableData(body);
+    // if (value === '') {
+    //   setSelectedName(null);
+    // } else {
+    //   if (selectedName !== null) {
+    //     setFilteredData(
+    //       originData.filter((data: any) => data.name == selectedName && data.department == value),
+    //     );
+    //   } else {
+    //     setFilteredData(originData.filter((data: any) => data.department == value));
+    //   }
+    //   setChecked(false);
+    // }
   };
 
   const onClickPeriod = (period: any) => {
@@ -343,77 +382,141 @@ export default function Attendance() {
     setEndDate(end);
   };
 
-  const getTableData = () => {
+  interface User {
+    userName: string;
+    startDate: string;
+    endDate: string;
+  }
+  interface Classes {
+    data: any[];
+  }
+
+  const getTableData = async (body: any) => {
     setIsLoading(true);
 
-    let array: any[] = [];
-    let now = moment();
+    const res = await getToken();
+    setAuthToken(res[0].token);
 
-    for (let i = 0; i < 40; i++) {
-      array[i] = {
-        id: i,
-        date: now.subtract(1, 'day').format('YYYY-MM-DD'),
-        belong: '강남건설',
-        department: i < 7 ? '개발' : '연구',
-        position: i < 7 ? '팀장' : '연구원',
-        name: i < 7 ? '강민수' : '권혁진',
-        phoneNumber: i < 7 ? '010-1234-5678' : '010-2628-0813',
-        registrationNumber: i < 7 ? '780102-1122338' : '900813-1698374',
-        startedAt: '08:00',
-        endedAt: '17:00',
-        1: i,
-        originImageUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUWRQcyRNDhGpkoRvgSTtiYMI1T_8PPgLwEA&usqp=CAU',
-        todayImageUrl:
-          i < 5
-            ? 'https://thumb.mt.co.kr/06/2023/06/2023062717453220668_1.jpg/dims/optimize/'
-            : null,
-        workdayCount: i + 1,
-      };
-    }
     try {
-      const nameArray = [...new Map(array.map((val: any) => [val.name, val])).values()];
-      const departmentArray = [...new Map(array.map((val: any) => [val.department, val])).values()];
+      const response: Classes = await postData('/FaceDevice/FaceUserWorkTimeSelect', body);
+      // let array: any[] = response.data;
 
-      setTimeout(() => {
-        setDepartmentItems(departmentArray);
-        setOriginData(array);
-        setFilteredData(array);
-        setOptions(nameArray);
-        setIsLoading(false);
-      }, 2000);
+      const nameArray = [
+        ...new Map(response.data.map((val: any) => [val.userName, val])).values(),
+      ].map((val) => {
+        return { label: val.userName, id: val.userId };
+      });
+      console.log(nameArray);
+
+      setOriginData(response.data);
+      setOptions(nameArray);
+    } catch (error) {
+      console.error(error);
     } finally {
-      // console.log(array);
+      setIsLoading(false);
     }
   };
+
+  // const getTableData = async () => {
+  //   setIsLoading(true);
+
+  //   let array: any[] = [];
+  //   let now = moment();
+
+  //   for (let i = 0; i < 40; i++) {
+  //     array[i] = {
+  //       id: i,
+  //       date: now.subtract(1, 'day').format('YYYY-MM-DD'),
+  //       belong: '강남건설',
+  //       department: i < 7 ? '개발' : '연구',
+  //       position: i < 7 ? '팀장' : '연구원',
+  //       name: i < 7 ? '강민수' : '권혁진',
+  //       phoneNumber: i < 7 ? '010-1234-5678' : '010-2628-0813',
+  //       registrationNumber: i < 7 ? '780102-1122338' : '900813-1698374',
+  //       startedAt: '08:00',
+  //       endedAt: '17:00',
+  //       1: i,
+  //       originImageUrl:
+  //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUWRQcyRNDhGpkoRvgSTtiYMI1T_8PPgLwEA&usqp=CAU',
+  //       todayImageUrl:
+  //         i < 5
+  //           ? 'https://thumb.mt.co.kr/06/2023/06/2023062717453220668_1.jpg/dims/optimize/'
+  //           : null,
+  //       workdayCount: i + 1,
+  //     };
+  //   }
+  //   try {
+  //     const nameArray = [...new Map(array.map((val: any) => [val.name, val])).values()];
+  //     const departmentArray = [...new Map(array.map((val: any) => [val.department, val])).values()];
+
+  //     setTimeout(() => {
+  //       setDepartmentItems(departmentArray);
+  //       setOriginData(array);
+  //       setFilteredData(array);
+  //       setOptions(nameArray);
+  //       setIsLoading(false);
+  //     }, 2000);
+  //   } finally {
+  //     // console.log(array);
+  //   }
+  // };
   const onClickAddMember = () => {
     console.log('click!!');
   };
   const onClickRemoveMember = () => {
+    const body = {
+      userName: selectedName ?? '',
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+    };
+
     if (confirm(`${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`)) {
       alert('삭제가 완료되었습니다.');
-      getTableData();
+      getTableData(body);
       setRowSelection({});
     }
   };
 
   const onChangeInputName = (e: any, value: any) => {
-    setSelectedName(value);
+    console.log(value);
+    console.log('1');
 
-    if (value !== '' && value !== null && department == '') {
-      setChecked(false);
-      setFilteredData(originData.filter((data: any) => data.name == value.name));
-    } else if (value !== '' && value !== null && department != '') {
-      setFilteredData(
-        originData.filter((data: any) => data.name == value.name && data.department == department),
-      );
+    const body = {
+      userName: value?.label ?? '',
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+    };
+
+    if (value === null) {
+      setSelectedName('');
+      getTableData(body);
     } else {
-      if (department) {
-        setFilteredData(originData.filter((data: any) => data.department == department));
-      } else {
-        setChecked(true);
-      }
+      setSelectedName(value.label);
+      getTableData(body);
     }
+
+    // if (value === null) {
+    //   setSelectedName('');
+    //   getTableData();
+    // } else {
+    //   setSelectedName(value.userName);
+    //   getTableData();
+    // }
+
+    // if (value !== '' && value !== null && department == '') {
+    //   setChecked(false);
+    //   setFilteredData(originData.filter((data: any) => data.name == value.name));
+    // } else if (value !== '' && value !== null && department != '') {
+    //   setFilteredData(
+    //     originData.filter((data: any) => data.name == value.name && data.department == department),
+    //   );
+    // } else {
+    //   if (department) {
+    //     setFilteredData(originData.filter((data: any) => data.department == department));
+    //   } else {
+    //     setChecked(true);
+    //   }
+    // }
   };
 
   return (
@@ -458,19 +561,17 @@ export default function Attendance() {
             <Autocomplete
               className="ml-[30px] active:outline-none"
               disablePortal
+              options={options}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              options={options.map((option: any) => {
-                return { id: option.id, name: option.name };
-              })}
-              getOptionLabel={(option: any) => option.name || ''}
+              getOptionLabel={(option: any) => option.label || ''}
               renderOption={(props, option: any) => (
                 <li {...props} key={option.id}>
-                  {option.name}
+                  {option.label}
                 </li>
               )}
               sx={{ width: 250 }}
               onChange={(e, value) => onChangeInputName(e, value)}
-              value={selectedName}
+              // value={selectedName}
               renderInput={(params) => <TextField sx={{ width: 250 }} {...params} />}
             />
           </div>
@@ -519,19 +620,19 @@ export default function Attendance() {
               6개월
             </Button>
           </div>
-          <div className="ml-5 text-[#7A7F94] text-base flex items-center">
+          {/* <div className="ml-5 text-[#7A7F94] text-base flex items-center">
             전체 보기
             <Switch
               checked={checked}
               onChange={() => setChecked(!checked)}
               inputProps={{ 'aria-label': 'controlled' }}
             />
-          </div>
+          </div> */}
         </div>
         {/* <Box> */}
         <MaterialReactTable
           columns={columns}
-          data={checked ? originData : filteredData}
+          data={originData}
           enableRowSelection
           enableStickyHeader
           enableStickyFooter
@@ -557,7 +658,7 @@ export default function Attendance() {
             },
           }}
           renderTopToolbarCustomActions={({ table }) =>
-            filteredData.length > 0 && (
+            originData.length > 0 && (
               <div className="w-full flex items-center gap-x-5">
                 <Button
                   color="primary"
@@ -566,7 +667,7 @@ export default function Attendance() {
                   variant="outlined">
                   <CSVLink
                     asyncOnClick={true}
-                    data={filteredData}
+                    data={originData}
                     headers={headers}
                     filename={'20240907_근태.csv'}>
                     엑셀 다운로드
@@ -629,7 +730,7 @@ export default function Attendance() {
           onClick={() => router.back()}>
           이전 페이지로
         </Button>
-        <Dialog
+        {/* <Dialog
           open={open}
           TransitionComponent={Transition}
           keepMounted
@@ -652,7 +753,7 @@ export default function Attendance() {
             <Button onClick={handleClose}>아니오</Button>
             <Button onClick={handleClose}>예</Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </main>
     </Page>
   );
