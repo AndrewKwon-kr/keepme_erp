@@ -68,14 +68,14 @@ export default function Attendance() {
       label: '일시',
       key: 'workDate',
     },
-    // {
-    //   label: '소속',
-    //   key: 'belong',
-    // },
-    // {
-    //   label: '부서',
-    //   key: 'department',
-    // },
+    {
+      label: '소속',
+      key: 'agency',
+    },
+    {
+      label: '부서',
+      key: 'department',
+    },
     // {
     //   label: '직책',
     //   key: 'position',
@@ -131,28 +131,28 @@ export default function Attendance() {
         },
         Cell: ({ cell }: any) => <div>{moment(cell.getValue()).format('YYYY-MM-DD')}</div>,
       },
-      // {
-      //   accessorKey: 'belong',
-      //   header: '소속',
-      //   size: 80,
-      //   muiTableHeadCellProps: {
-      //     align: 'center',
-      //   },
-      //   muiTableBodyCellProps: {
-      //     align: 'center',
-      //   },
-      // },
-      // {
-      //   accessorKey: 'department',
-      //   header: '부서',
-      //   size: 80,
-      //   muiTableHeadCellProps: {
-      //     align: 'center',
-      //   },
-      //   muiTableBodyCellProps: {
-      //     align: 'center',
-      //   },
-      // },
+      {
+        accessorKey: 'agency',
+        header: '소속',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
+      },
+      {
+        accessorKey: 'department',
+        header: '부서',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
+      },
       // {
       //   accessorKey: 'position',
       //   header: '직책',
@@ -406,10 +406,13 @@ export default function Attendance() {
       ].map((val) => {
         return { label: val.userName, id: val.userId };
       });
-      console.log(nameArray);
+      const departmentArray = [
+        ...new Map(response.data.map((val: any) => [val.department, val])).values(),
+      ];
 
       setOriginData(response.data);
       setOptions(nameArray);
+      setDepartmentItems(departmentArray);
     } catch (error) {
       console.error(error);
     } finally {
