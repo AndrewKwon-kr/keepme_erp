@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getAuthUser, setAuthToken } from 'api';
 
 export default function Login() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function Login() {
     password: false,
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     setIsError({ email: false, password: false });
     event.preventDefault();
 
@@ -35,11 +36,14 @@ export default function Login() {
     }
 
     if (data.get('email').length >= 12 && data.get('password').length !== 0) {
-      console.log('!!');
-      localStorage.setItem('user', { email: data.get('email'), password: data.get('password') });
-      router.push('/home');
+      const response = await getAuthUser();
+
+      localStorage.setItem('authUser', JSON.stringify(response[0]));
+      setAuthToken(response[0].token);
+      router.push('/attendance');
     }
   };
+
   const onClickPrivacy = () => {
     window.open('https://inconus.co.kr/policy/privacy', '_blank');
   };

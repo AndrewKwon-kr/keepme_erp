@@ -30,8 +30,6 @@ export const setAuthToken = async (token?: string) => {
   } else {
     delete client.defaults.headers.common.Authorization;
     localStorage.removeItem(JWT_ACCESS_TOKEN);
-    const res = await getToken();
-    console.log(res);
   }
 };
 
@@ -91,7 +89,7 @@ export const deleteData = async <T>(
 };
 
 // 임시 토큰 발행 api
-export const getToken = async () => {
+export const getAuthUser = async () => {
   try {
     const response = await postData('/Account/login', {
       id: '01044455107',

@@ -14,12 +14,12 @@ import { useAtomValue } from 'jotai';
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { TransitionProps } from '@mui/material/transitions';
-import { getToken, postData, setAuthToken } from '../../../api';
+import { getAuthUser, postData, setAuthToken } from '../../../api';
 
 // const Transition = React.forwardRef(function Transition(
 //   props: TransitionProps & {
@@ -44,12 +44,14 @@ export default function Attendance() {
   const [departmentItems, setDepartmentItems] = useState<any>([]);
   // const [name, setName] = useState<string>('');
   const [selectedName, setSelectedName] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState<any>(moment());
+  const [startDate, setStartDate] = useState<any>(moment().subtract(1, 'M'));
   const [endDate, setEndDate] = useState<any>(moment());
   const [originData, setOriginData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [checked, setChecked] = useState<boolean>(false);
+  // const [checked, setChecked] = useState<boolean>(false);
   const [options, setOptions] = useState<any>([]);
+
+  const mounted = useRef(false);
 
   // const [selectedMember, setSelectedMember] = useState<{
   //   name: '';
@@ -277,20 +279,24 @@ export default function Attendance() {
   // }, []);
 
   useEffect(() => {
-    const body = {
-      userName: selectedName ?? '',
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-    };
-    console.log(2);
-    getTableData(body);
-    initState();
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      getTableData(getBody(selectedName, startDate, endDate));
+    }
   }, [areaValue]);
 
   const initState = () => {
     setStartDate(moment().subtract(1, 'M'));
     setEndDate(moment());
-    setChecked(false);
+  };
+
+  const getBody = (userName: any, startDate: any, endDate: any) => {
+    return {
+      userName: userName ?? '',
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+    };
   };
 
   useEffect(() => {
@@ -299,16 +305,11 @@ export default function Attendance() {
   }, [rowSelection]);
 
   useEffect(() => {
-    console.log(3);
-    const body = {
-      userName: selectedName ?? '',
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-    };
-    getTableData(body);
-
-    console.log('start : ', startDate.format('YYYY-MM-DD'));
-    console.log('end : ', endDate.format('YYYY-MM-DD'));
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      getTableData(getBody(selectedName, startDate, endDate));
+    }
     // const start = startDate.startOf('day');
     // const end = endDate.endOf('day');
 
@@ -355,12 +356,7 @@ export default function Attendance() {
   const handleChangeDepartment = (event: any) => {
     const value = event.target.value;
     setDepartment(value);
-    const body = {
-      userName: selectedName ?? '',
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-    };
-    getTableData(body);
+    getTableData(getBody(selectedName, startDate, endDate));
     // if (value === '') {
     //   setSelectedName(null);
     // } else {
@@ -392,9 +388,9 @@ export default function Attendance() {
   }
 
   const getTableData = async (body: any) => {
-    setIsLoading(true);
+    const res = await getAuthUser();
 
-    const res = await getToken();
+    setIsLoading(true);
     setAuthToken(res[0].token);
 
     try {
@@ -420,75 +416,19 @@ export default function Attendance() {
     }
   };
 
-  // const getTableData = async () => {
-  //   setIsLoading(true);
-
-  //   let array: any[] = [];
-  //   let now = moment();
-
-  //   for (let i = 0; i < 40; i++) {
-  //     array[i] = {
-  //       id: i,
-  //       date: now.subtract(1, 'day').format('YYYY-MM-DD'),
-  //       belong: '강남건설',
-  //       department: i < 7 ? '개발' : '연구',
-  //       position: i < 7 ? '팀장' : '연구원',
-  //       name: i < 7 ? '강민수' : '권혁진',
-  //       phoneNumber: i < 7 ? '010-1234-5678' : '010-2628-0813',
-  //       registrationNumber: i < 7 ? '780102-1122338' : '900813-1698374',
-  //       startedAt: '08:00',
-  //       endedAt: '17:00',
-  //       1: i,
-  //       originImageUrl:
-  //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUWRQcyRNDhGpkoRvgSTtiYMI1T_8PPgLwEA&usqp=CAU',
-  //       todayImageUrl:
-  //         i < 5
-  //           ? 'https://thumb.mt.co.kr/06/2023/06/2023062717453220668_1.jpg/dims/optimize/'
-  //           : null,
-  //       workdayCount: i + 1,
-  //     };
-  //   }
-  //   try {
-  //     const nameArray = [...new Map(array.map((val: any) => [val.name, val])).values()];
-  //     const departmentArray = [...new Map(array.map((val: any) => [val.department, val])).values()];
-
-  //     setTimeout(() => {
-  //       setDepartmentItems(departmentArray);
-  //       setOriginData(array);
-  //       setFilteredData(array);
-  //       setOptions(nameArray);
-  //       setIsLoading(false);
-  //     }, 2000);
-  //   } finally {
-  //     // console.log(array);
-  //   }
-  // };
   const onClickAddMember = () => {
     console.log('click!!');
   };
   const onClickRemoveMember = () => {
-    const body = {
-      userName: selectedName ?? '',
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-    };
-
     if (confirm(`${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`)) {
       alert('삭제가 완료되었습니다.');
-      getTableData(body);
+      getTableData(getBody(selectedName, startDate, endDate));
       setRowSelection({});
     }
   };
 
   const onChangeInputName = (e: any, value: any) => {
-    console.log(value);
-    console.log('1');
-
-    const body = {
-      userName: value?.label ?? '',
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-    };
+    const body = getBody(value?.label ?? '', startDate, endDate);
 
     if (value === null) {
       setSelectedName('');
@@ -588,14 +528,12 @@ export default function Attendance() {
                   slotProps={{ textField: { size: 'small' } }}
                   value={startDate}
                   onChange={(newValue) => setStartDate(newValue)}
-                  disabled={checked}
                 />
                 &nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;
                 <DatePicker
                   slotProps={{ textField: { size: 'small' } }}
                   value={endDate}
                   onChange={(newValue) => setEndDate(newValue)}
-                  disabled={checked}
                 />
               </LocalizationProvider>
             </div>
@@ -604,22 +542,19 @@ export default function Attendance() {
             <Button
               className="bg-[#555555] w-20"
               variant="contained"
-              onClick={() => onClickPeriod(1)}
-              disabled={checked}>
+              onClick={() => onClickPeriod(1)}>
               1개월
             </Button>
             <Button
               className="bg-[#555555] w-20"
               variant="contained"
-              onClick={() => onClickPeriod(3)}
-              disabled={checked}>
+              onClick={() => onClickPeriod(3)}>
               3개월
             </Button>
             <Button
               className="bg-[#555555] w-20"
               variant="contained"
-              onClick={() => onClickPeriod(6)}
-              disabled={checked}>
+              onClick={() => onClickPeriod(6)}>
               6개월
             </Button>
           </div>
@@ -640,7 +575,7 @@ export default function Attendance() {
           enableStickyHeader
           enableStickyFooter
           enableColumnActions={false}
-          enableSorting={false}
+          // enableSorting={false}
           muiTableContainerProps={{
             sx: {
               maxHeight: 700,

@@ -63,12 +63,17 @@ const menus = [
   { path: '/setting', name: '설정', icon: 'setting' },
 ];
 
-const user = {
-  id: 0,
-  name: '권혁진',
-  imageUrl:
-    'https://beluv-images.s3.ap-northeast-2.amazonaws.com/user_profile_images/user_profile_13416_1701998414919.png',
-};
+// const user = {
+//   id: 0,
+//   name: '권혁진',
+//   imageUrl:
+//     'https://beluv-images.s3.ap-northeast-2.amazonaws.com/user_profile_images/user_profile_13416_1701998414919.png',
+// };
+interface User {
+  id: number | null | undefined;
+  name: string | null;
+  imageUrl: string | null;
+}
 
 export const areaAtom = atom(0);
 
@@ -87,6 +92,7 @@ export default function Page({ children }: AppLayoutProps) {
   const open = Boolean(anchorEl);
 
   const [realTime, setRealTime] = useState(moment().format('YYYY년 MM월 DD일(dd)'));
+  const [user, setUser] = useState<User>({ id: null, name: null, imageUrl: null });
   // useInterval
   useInterval(() => {
     setRealTime(moment().format('YYYY년 MM월 DD일(dd)'));
@@ -99,7 +105,7 @@ export default function Page({ children }: AppLayoutProps) {
     setAnchorEl(null);
   };
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem('authUser');
     router.refresh();
   };
 
@@ -110,8 +116,10 @@ export default function Page({ children }: AppLayoutProps) {
   const router = useRouter();
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    console.log(user);
+    const user = localStorage.getItem('authUser');
+    console.log(JSON.parse(user));
+    setUser(JSON.parse(user));
+
     if (!user) {
       router.push('/login');
     }
@@ -135,6 +143,8 @@ export default function Page({ children }: AppLayoutProps) {
         return <CalendarMonthIcon sx={{ fontSize: 18 }} />;
       case 'setting':
         return <SettingsIcon sx={{ fontSize: 18 }} />;
+      default:
+        return <SettingsIcon sx={{ fontSize: 18 }} />;
     }
   };
   const onChangeSearch = (e: any) => {
@@ -148,31 +158,6 @@ export default function Page({ children }: AppLayoutProps) {
       setIsNone(false);
     }
   }, [isHidden]);
-
-  // const [darkTheme, setDarkTheme] = useState(undefined);
-
-  // const handleToggle = () => {
-  //   setDarkTheme(!darkTheme);
-  // };
-
-  // useEffect(() => {
-  //   if (darkTheme !== undefined) {
-  //     if (darkTheme) {
-  //       document.body.setAttribute('data-theme', 'dark');
-  //       window.localStorage.setItem('theme', 'dark');
-  //     } else {
-  //       document.body.removeAttribute('data-theme');
-  //       window.localStorage.setItem('theme', 'light');
-  //     }
-  //   }
-  // }, [darkTheme]);
-
-  // useEffect(() => {
-  //   const root = window.document.body;
-  //   const initialColorValue = root.style.getPropertyValue('--initial-color-mode');
-
-  //   setDarkTheme(initialColorValue === 'dark');
-  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -189,17 +174,6 @@ export default function Page({ children }: AppLayoutProps) {
             'pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5 transition ease-in-out delay-150 duration-300' +
             (isNone ? ' hidden' : isHidden && ' opacity-0 -translate-x-full')
           }>
-          {/* <div
-            className={
-              'w-[210px] h-10 px-5 py-5 flex items-center justify-center transition ease-in duration-300 cursor-pointer rounded-md' +
-              (darkTheme ? ' bg-slate-500' : ' bg-slate-100')
-            }
-            onClick={handleToggle}>
-            <IconButton onClick={handleToggle} color="inherit">
-              {darkTheme ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-            {darkTheme ? '다크모드' : '일반모드'}
-          </div> */}
           {menus.map((menu) => (
             <Link href={menu.path} key={menu.name}>
               <div
@@ -250,16 +224,19 @@ export default function Page({ children }: AppLayoutProps) {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}>
                     <div className="flex items-center gap-x-2.5">
-                      {user.imageUrl ? (
+                      {/* {user.imageUrl ? (
                         <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
                           <img src={user.imageUrl} alt="프로필이미지" />
                         </div>
                       ) : (
                         <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
-                          {user.name.substring(0, 1)}
+                          {user.name?.substring(0, 1)}
                         </div>
-                      )}
-                      <div className="text-base">{user.name}</div>
+                      )} */}
+                      <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
+                        {user && user.name?.substring(0, 1)}
+                      </div>
+                      <div className="text-base">{user?.name}</div>
                     </div>
                   </Button>
                   <Menu
