@@ -42,7 +42,7 @@ export default function Attendance() {
   const [belong, setBelong] = useState<string>('');
   const [department, setDepartment] = useState<string>('');
   const [departmentItems, setDepartmentItems] = useState<any>([]);
-  // const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<any>(moment().subtract(1, 'M'));
   const [endDate, setEndDate] = useState<any>(moment());
@@ -427,14 +427,14 @@ export default function Attendance() {
     }
   };
 
-  const onChangeInputName = (e: any, value: any) => {
-    const body = getBody(value?.label ?? '', startDate, endDate);
+  const onChangeInputName = (value: string) => {
+    const body = getBody(value ?? '', startDate, endDate);
 
-    if (value === null) {
+    if (value === '') {
       setSelectedName('');
       getTableData(body);
     } else {
-      setSelectedName(value.label);
+      setSelectedName(value);
       getTableData(body);
     }
 
@@ -501,7 +501,23 @@ export default function Attendance() {
           </div>
           <div className="text-[#7A7F94] text-base flex items-center">
             <div className="">이름</div>
-            <Autocomplete
+            <TextField
+              className="ml-[30px] w-[250px] active:outline-none"
+              id="outlined-controlled"
+              placeholder="이름"
+              value={name}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setName(event.target.value);
+              }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  console.log(name);
+                  onChangeInputName(name);
+                  // write your functionality here
+                }
+              }}
+            />
+            {/* <Autocomplete
               className="ml-[30px] active:outline-none"
               disablePortal
               options={options}
@@ -516,7 +532,7 @@ export default function Attendance() {
               onChange={(e, value) => onChangeInputName(e, value)}
               // value={selectedName}
               renderInput={(params) => <TextField sx={{ width: 250 }} {...params} />}
-            />
+            /> */}
           </div>
         </div>
         <div className="my-5 flex items-center">
