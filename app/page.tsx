@@ -69,13 +69,49 @@ const menus = [
 //   imageUrl:
 //     'https://beluv-images.s3.ap-northeast-2.amazonaws.com/user_profile_images/user_profile_13416_1701998414919.png',
 // };
-interface User {
-  id: number | null | undefined;
-  name: string | null;
-  imageUrl: string | null;
+export interface UserProps {
+  code: number;
+  userid: string;
+  name: string;
+  departmentCode: string;
+  mobileNumber: string;
+  birthDay: string;
+  startDate: string;
+  agencyParentName: string;
+  agencyCode: string;
+  parentCode: string;
+  companyName: string;
+  companyCode: string;
+  agencyname: string;
+  departmentName: string;
+  agencyParentManager: number;
+  agencyManager: number;
+  picture: string;
+  token: string;
 }
 
 export const areaAtom = atom(0);
+export const userAtom = atom<UserProps>({
+  code: 1,
+  userid: '01044455107',
+  name: '관리자',
+  departmentCode: '1',
+  mobileNumber: '01044455107',
+  birthDay: '19790311',
+  startDate: '20220801',
+  agencyParentName: '부산',
+  agencyCode: '0001',
+  parentCode: '0000',
+  companyName: 'GS건설',
+  companyCode: '1',
+  agencyname: '연산동 행복주택',
+  departmentName: '일반',
+  agencyParentManager: 0,
+  agencyManager: 1,
+  picture: 'https://js.devexpress.com/Demos/WIdgetsGallery/JSDemos/images/employees/01.png',
+  token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiMDEwNDQ0NTUxMDciLCJleHAiOjE3MDY1NzU3NjMsImlzcyI6Imh0dHBzOi8vYXBpLmluY29udXMua3IiLCJhdWQiOiJNeSBrZWVwbWUgVXNlcnMifQ.MeU1PVaH-kMJ8-vMHQ2Ua-g4X9zwJnnJq8fBH2eSEoQ',
+});
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -92,7 +128,8 @@ export default function Page({ children }: AppLayoutProps) {
   const open = Boolean(anchorEl);
 
   const [realTime, setRealTime] = useState(moment().format('YYYY년 MM월 DD일(dd)'));
-  const [user, setUser] = useState<User>({ id: null, name: null, imageUrl: null });
+  const [user, setUser] = useAtom(userAtom);
+  // const [user, setUser] = useState<User>({ id: null, name: null, imageUrl: null });
   // useInterval
   useInterval(() => {
     setRealTime(moment().format('YYYY년 MM월 DD일(dd)'));

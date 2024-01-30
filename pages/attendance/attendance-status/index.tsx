@@ -9,7 +9,7 @@ import Switch from '@mui/material/Switch';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Page, { areaAtom } from 'app/page';
+import Page, { areaAtom, userAtom } from 'app/page';
 import { useAtomValue } from 'jotai';
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import moment from 'moment';
@@ -19,7 +19,7 @@ import { CSVLink } from 'react-csv';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { TransitionProps } from '@mui/material/transitions';
-import { getAuthUser, postData, setAuthToken } from '../../../api';
+import { getAuthUser, postData, setAuthToken, getDeptList } from '../../../api';
 
 // const Transition = React.forwardRef(function Transition(
 //   props: TransitionProps & {
@@ -60,6 +60,7 @@ export default function Attendance() {
   // }>({ name: '', originImageUrl: '', todayImageUrl: '' });
 
   const areaValue = useAtomValue(areaAtom);
+  const user = useAtomValue(userAtom);
 
   const headers = [
     {
@@ -282,13 +283,17 @@ export default function Attendance() {
     if (!mounted.current) {
       mounted.current = true;
     } else {
+      initState();
       getTableData(getBody(selectedName, startDate, endDate));
+      console.log('1');
     }
   }, [areaValue]);
 
   const initState = () => {
     setStartDate(moment().subtract(1, 'M'));
     setEndDate(moment());
+    setDepartment('');
+    setName('');
   };
 
   const getBody = (userName: any, startDate: any, endDate: any) => {
@@ -309,6 +314,7 @@ export default function Attendance() {
       mounted.current = true;
     } else {
       getTableData(getBody(selectedName, startDate, endDate));
+      console.log('2');
     }
     // const start = startDate.startOf('day');
     // const end = endDate.endOf('day');
@@ -355,6 +361,7 @@ export default function Attendance() {
 
   const handleChangeDepartment = (event: any) => {
     const value = event.target.value;
+    console.log(value);
     setDepartment(value);
     getTableData(getBody(selectedName, startDate, endDate));
     // if (value === '') {
@@ -402,13 +409,9 @@ export default function Attendance() {
       ].map((val) => {
         return { label: val.userName, id: val.userId };
       });
-      const departmentArray = [
-        ...new Map(response.data.map((val: any) => [val.department, val])).values(),
-      ];
 
       setOriginData(response.data);
       setOptions(nameArray);
-      setDepartmentItems(departmentArray);
     } catch (error) {
       console.error(error);
     } finally {
@@ -462,6 +465,26 @@ export default function Attendance() {
     // }
   };
 
+  useEffect(() => {
+    const deptList = async () => {
+      try {
+        const response = await getDeptList({
+          companyCode: user.companyCode,
+          agencyCode: user.agencyCode,
+          employeeCode: user.code,
+        });
+
+        const departmentArray = [...new Map(response.map((val: any) => [val.Name, val])).values()];
+
+        setDepartmentItems(departmentArray);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    deptList();
+  }, []);
+
   return (
     <Page>
       <main className="p-5 w-full overflow-x-auto whitespace-nowrap">
@@ -491,8 +514,8 @@ export default function Attendance() {
                 <MenuItem value={''}>-</MenuItem>
                 {departmentItems.map((data: any) => {
                   return (
-                    <MenuItem key={data.department} value={data.department}>
-                      {data.department}
+                    <MenuItem key={data.Code} value={data.Name}>
+                      {data.Name}
                     </MenuItem>
                   );
                 })}

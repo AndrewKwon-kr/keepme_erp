@@ -101,3 +101,13 @@ export const getAuthUser = async () => {
     throw new Error(error.message);
   }
 };
+
+// 근로자 부서리스트
+export const getDeptList = async (body: any) => {
+  try {
+    const { data } = await postData('/User/DeptList', body);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
