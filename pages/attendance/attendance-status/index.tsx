@@ -20,6 +20,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { TransitionProps } from '@mui/material/transitions';
 import { getAuthUser, postData, setAuthToken, getDeptList } from '../../../api';
+import WorkerStatusModal from '../../../components/attendance/WorkerStatusModal';
 
 // const Transition = React.forwardRef(function Transition(
 //   props: TransitionProps & {
@@ -50,6 +51,8 @@ export default function Attendance() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [checked, setChecked] = useState<boolean>(false);
   const [options, setOptions] = useState<any>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedWorker, setSelectedWorker] = useState<any>([]);
 
   const mounted = useRef(false);
 
@@ -285,7 +288,6 @@ export default function Attendance() {
     } else {
       initState();
       getTableData(getBody(selectedName, startDate, endDate));
-      console.log('1');
     }
   }, [areaValue]);
 
@@ -314,7 +316,6 @@ export default function Attendance() {
       mounted.current = true;
     } else {
       getTableData(getBody(selectedName, startDate, endDate));
-      console.log('2');
     }
     // const start = startDate.startOf('day');
     // const end = endDate.endOf('day');
@@ -361,7 +362,7 @@ export default function Attendance() {
 
   const handleChangeDepartment = (event: any) => {
     const value = event.target.value;
-    console.log(value);
+
     setDepartment(value);
     getTableData(getBody(selectedName, startDate, endDate));
     // if (value === '') {
@@ -422,6 +423,7 @@ export default function Attendance() {
   const onClickAddMember = () => {
     console.log('click!!');
   };
+
   const onClickRemoveMember = () => {
     if (confirm(`${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`)) {
       alert('삭제가 완료되었습니다.');
@@ -488,6 +490,7 @@ export default function Attendance() {
   return (
     <Page>
       <main className="p-5 w-full overflow-x-auto whitespace-nowrap">
+        <WorkerStatusModal open={open} setOpen={setOpen} data={selectedWorker}></WorkerStatusModal>
         <div className="flex items-center gap-x-10">
           {/* <div className="text-[#7A7F94] text-base flex items-center ">
             <div className="">소속</div>
@@ -534,7 +537,6 @@ export default function Attendance() {
               }}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  console.log(name);
                   onChangeInputName(name);
                   // write your functionality here
                 }
@@ -695,7 +697,10 @@ export default function Attendance() {
           }
           muiTableBodyRowProps={({ row }) => ({
             onDoubleClick: (event) => {
-              alert(`ID: ${row.id} 더블클릭!`);
+              setOpen(true);
+              setSelectedWorker(row.original);
+              console.log(row.id);
+              // alert(`ID: ${row.id} 더블클릭!`);
             },
           })}
         />
