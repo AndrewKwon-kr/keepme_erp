@@ -75,6 +75,10 @@ export default function Attendance() {
       key: 'workDate',
     },
     {
+      label: '회사',
+      key: 'company',
+    },
+    {
       label: '소속',
       key: 'agency',
     },
@@ -106,10 +110,10 @@ export default function Attendance() {
       label: '퇴근',
       key: 'lastOutTime',
     },
-    {
-      label: '상태',
-      key: 'status',
-    },
+    // {
+    //   label: '상태',
+    //   key: 'status',
+    // },
   ];
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
@@ -136,6 +140,17 @@ export default function Attendance() {
           align: 'center',
         },
         Cell: ({ cell }: any) => <div>{moment(cell.getValue()).format('YYYY-MM-DD')}</div>,
+      },
+      {
+        accessorKey: 'company',
+        header: '회사',
+        size: 80,
+        muiTableHeadCellProps: {
+          align: 'center',
+        },
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
       },
       {
         accessorKey: 'agency',
@@ -227,7 +242,36 @@ export default function Attendance() {
           <div>{cell.getValue() ? moment(cell.getValue()).format('HH:mm') : ''}</div>
         ),
       },
-      { accessorKey: 'status', header: '상태', size: 60 },
+      {
+        accessorKey: 'firstInTimePictureData',
+        header: '출근 모습',
+        size: 60,
+        Cell: ({ cell }: any) => (
+          <div>
+            {cell.getValue() ? (
+              <img className="rounded-md" src={`data:image/png;base64,${cell.getValue()}`} />
+            ) : (
+              ''
+            )}
+          </div>
+          // <div>{cell.getValue() ? moment(cell.getValue()).format('HH:mm') : ''}</div>
+        ),
+      },
+      {
+        accessorKey: 'lastOutPictureData',
+        header: '퇴근 모습',
+        size: 60,
+        Cell: ({ cell }: any) => (
+          <div>
+            {cell.getValue() ? (
+              <img className="rounded-md" src={`data:image/png;base64,${cell.getValue()}`} />
+            ) : (
+              ''
+            )}
+          </div>
+        ),
+      },
+      // { accessorKey: 'status', header: '상태', size: 60 },
       // {
       //   accessorKey: '1',
       //   header: '사진 비교',

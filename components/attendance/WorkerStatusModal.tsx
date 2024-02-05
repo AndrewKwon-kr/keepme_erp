@@ -26,12 +26,23 @@ export default function WorkerStatusModal({ open, setOpen, data }: any) {
         </div>
         <div className="py-5">
           <div className="flex items-center justify-center">
-            {data.imageUrl ? <img src={data.imageUrl} /> : <img src="/images/image_avatar.svg" />}
+            {data.firstInTimePictureData ? (
+              <img
+                className="rounded-full"
+                src={`data:image/png;base64,${data.firstInTimePictureData}`}
+              />
+            ) : (
+              <img src="/images/image_avatar.svg" />
+            )}
           </div>
           <div className="mt-10 flex flex-col">
             <div className="text-lg font-bold mb-3">{data.userName}</div>
             <div className="text-sm">
-              <b>소속기업&nbsp;</b>
+              <b>회사&nbsp;</b>
+              {data.company}
+            </div>
+            <div className="text-sm">
+              <b>소속&nbsp;</b>
               {data.agency}
             </div>
             <div className="text-sm">
