@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import './globals.css';
 import { useRouter } from 'next/navigation';
+import LocalStorage from 'interface/localstorage';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ interface AppLayoutProps {
 const RootLayout = ({ children }: AppLayoutProps) => {
   const router = useRouter();
 
-  const user = localStorage.getItem('user');
+  const user = LocalStorage.getItem('user');
   useEffect(() => {
     console.log(user);
     if (!user) {

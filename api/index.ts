@@ -1,5 +1,6 @@
 import axios, { Axios, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'; // 추가
 import { APIResponse } from '../interface/response';
+import LocalStorage from 'interface/localstorage';
 
 export const JWT_AUTH_USER = 'authUser'; // 인증 유저 데이터 저장 용
 export const JWT_ACCESS_TOKEN = 'accessToken';
@@ -26,10 +27,10 @@ client.interceptors.response.use(
 export const setAuthToken = async (token?: string) => {
   if (token) {
     client.defaults.headers.common.Authorization = `Bearer ${token}`;
-    localStorage.setItem(JWT_ACCESS_TOKEN, token);
+    LocalStorage.setItem(JWT_ACCESS_TOKEN, token);
   } else {
     delete client.defaults.headers.common.Authorization;
-    localStorage.removeItem(JWT_ACCESS_TOKEN);
+    LocalStorage.removeItem(JWT_ACCESS_TOKEN);
   }
 };
 
@@ -91,7 +92,7 @@ export const deleteData = async <T>(
 // 임시 토큰 발행 api
 export const getAuthUser = async () => {
   try {
-    const response = await postData('/Account/login', {
+    const response: any = await postData('/Account/login', {
       id: '01044455107',
       password: '0',
       deviceToken: '0',
@@ -105,7 +106,7 @@ export const getAuthUser = async () => {
 // 근로자 부서리스트
 export const getDeptList = async (body: any) => {
   try {
-    const { data } = await postData('/User/DeptList', body);
+    const { data }: any = await postData('/User/DeptList', body);
     return data;
   } catch (error) {
     throw new Error(error.message);

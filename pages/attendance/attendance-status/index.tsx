@@ -9,7 +9,9 @@ import Switch from '@mui/material/Switch';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Page, { areaAtom, userAtom } from 'app/page';
+import Page from 'app/page';
+import { areaAtom, userAtom } from 'interface/jotai';
+
 import { useAtomValue } from 'jotai';
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import moment from 'moment';

@@ -35,6 +35,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import { useRouter } from 'next/navigation';
 
+import { areaAtom, userAtom } from 'interface/jotai';
+import LocalStorage from 'interface/localstorage';
+
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
@@ -69,55 +72,8 @@ const menus = [
 //   imageUrl:
 //     'https://beluv-images.s3.ap-northeast-2.amazonaws.com/user_profile_images/user_profile_13416_1701998414919.png',
 // };
-export interface UserProps {
-  code: number;
-  userid: string;
-  name: string;
-  departmentCode: string;
-  mobileNumber: string;
-  birthDay: string;
-  startDate: string;
-  agencyParentName: string;
-  agencyCode: string;
-  parentCode: string;
-  companyName: string;
-  companyCode: string;
-  agencyname: string;
-  departmentName: string;
-  agencyParentManager: number;
-  agencyManager: number;
-  picture: string;
-  token: string;
-}
 
-export const areaAtom = atom(0);
-export const userAtom = atom<UserProps>({
-  code: 1,
-  userid: '01044455107',
-  name: '관리자',
-  departmentCode: '1',
-  mobileNumber: '01044455107',
-  birthDay: '19790311',
-  startDate: '20220801',
-  agencyParentName: '부산',
-  agencyCode: '0001',
-  parentCode: '0000',
-  companyName: 'GS건설',
-  companyCode: '1',
-  agencyname: '연산동 행복주택',
-  departmentName: '일반',
-  agencyParentManager: 0,
-  agencyManager: 1,
-  picture: 'https://js.devexpress.com/Demos/WIdgetsGallery/JSDemos/images/employees/01.png',
-  token:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiMDEwNDQ0NTUxMDciLCJleHAiOjE3MDY1NzU3NjMsImlzcyI6Imh0dHBzOi8vYXBpLmluY29udXMua3IiLCJhdWQiOiJNeSBrZWVwbWUgVXNlcnMifQ.MeU1PVaH-kMJ8-vMHQ2Ua-g4X9zwJnnJq8fBH2eSEoQ',
-});
-
-interface AppLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function Page({ children }: AppLayoutProps) {
+export default function Page({ children }: any) {
   const pathname = usePathname();
   const [search, setSearch] = useState('');
   const [area, setArea] = useAtom(areaAtom);
@@ -142,7 +98,7 @@ export default function Page({ children }: AppLayoutProps) {
     setAnchorEl(null);
   };
   const handleLogout = () => {
-    localStorage.removeItem('authUser');
+    LocalStorage.removeItem('authUser');
     router.refresh();
   };
 
@@ -153,7 +109,7 @@ export default function Page({ children }: AppLayoutProps) {
   const router = useRouter();
 
   useEffect(() => {
-    const user = localStorage.getItem('authUser');
+    const user = LocalStorage.getItem('authUser');
     console.log(JSON.parse(user));
     setUser(JSON.parse(user));
 
