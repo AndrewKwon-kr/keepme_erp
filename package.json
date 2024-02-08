@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p 8081",
+    "lint": "next lint",
+    "deploy-dev": "npm install && npm run build && eb deploy Inconus-ERP-TEST-env"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
