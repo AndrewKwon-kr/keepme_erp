@@ -390,7 +390,7 @@ export default function Attendance() {
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
-    } else if (pagination.pageIndex > 0) {
+    } else if (originData.length > 0) {
       console.log('page', pagination.pageIndex);
       getTableData(
         getBody(selectedName, startDate, endDate, pagination.pageIndex, pagination.pageSize),
