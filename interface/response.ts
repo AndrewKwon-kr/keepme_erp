@@ -16,4 +16,5 @@ export interface APIResponse<T> {
   result: T; // 데이터 내용
   timestamp: Date; // 시간
   data: T; // 데이터 내용
+  totalCount: number;
 }

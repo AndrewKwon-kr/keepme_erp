@@ -7,7 +7,6 @@ export default function WorkerStatusModal({ open, setOpen, data }: any) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(data);
   return (
     <Modal
       open={open}

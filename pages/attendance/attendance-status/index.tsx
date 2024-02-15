@@ -1,7 +1,15 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Pagination,
+  Slide,
+} from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -13,7 +21,7 @@ import Page from 'app/page';
 import { areaAtom, userAtom } from 'interface/jotai';
 
 import { useAtomValue } from 'jotai';
-import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
+import { MaterialReactTable, MRT_ColumnDef, MRT_PaginationState } from 'material-react-table';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -55,6 +63,11 @@ export default function Attendance() {
   const [options, setOptions] = useState<any>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [selectedWorker, setSelectedWorker] = useState<any>([]);
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [rowCount, setRowCount] = useState(0);
 
   const mounted = useRef(false);
 
@@ -328,15 +341,6 @@ export default function Attendance() {
 
   // }, []);
 
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-    } else {
-      initState();
-      getTableData(getBody(selectedName, startDate, endDate));
-    }
-  }, [areaValue]);
-
   const initState = () => {
     setStartDate(moment().subtract(1, 'M'));
     setEndDate(moment());
@@ -344,11 +348,19 @@ export default function Attendance() {
     setName('');
   };
 
-  const getBody = (userName: any, startDate: any, endDate: any) => {
+  const getBody = (
+    userName: any,
+    startDate: any,
+    endDate: any,
+    pageIndex: number,
+    rowPerPage: number,
+  ) => {
     return {
       userName: userName ?? '',
       startDate: startDate.format('YYYYMMDD'),
       endDate: endDate.format('YYYYMMDD'),
+      pageIndex: pageIndex + 1,
+      rowPerPage,
     };
   };
 
@@ -361,46 +373,30 @@ export default function Attendance() {
     if (!mounted.current) {
       mounted.current = true;
     } else {
-      getTableData(getBody(selectedName, startDate, endDate));
+      initState();
+      getTableData(getBody(selectedName, startDate, endDate, 0, pagination.pageSize));
     }
-    // const start = startDate.startOf('day');
-    // const end = endDate.endOf('day');
+  }, [areaValue]);
 
-    // if (name == '') {
-    //   setFilteredData(
-    //     originData.filter(
-    //       (data: any) =>
-    //         moment(data.date).isSameOrAfter(start) && moment(data.date).isSameOrBefore(end),
-    //     ),
-    //   );
-    // } else {
-    //   setFilteredData(
-    //     originData.filter(
-    //       (data: any) =>
-    //         moment(data.date).isSameOrAfter(start) &&
-    //         moment(data.date).isSameOrBefore(end) &&
-    //         data.name == name,
-    //     ),
-    //   );
-    // }
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      console.log('date');
+      getTableData(getBody(selectedName, startDate, endDate, 0, pagination.pageSize));
+    }
   }, [startDate, endDate]);
 
-  // useEffect(() => {
-  //   console.log(4);
-  //   getTableData();
-
-  //   // const start = startDate.startOf('day');
-  //   // const end = endDate.endOf('day');
-
-  //   // setFilteredData(
-  //   //   originData.filter(
-  //   //     (data: any) =>
-  //   //       moment(data.date).isSameOrAfter(start) &&
-  //   //       moment(data.date).isSameOrBefore(end) &&
-  //   //       data.name == name,
-  //   //   ),
-  //   // );
-  // }, [name]);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+    } else if (pagination.pageIndex > 0) {
+      console.log('page', pagination.pageIndex);
+      getTableData(
+        getBody(selectedName, startDate, endDate, pagination.pageIndex, pagination.pageSize),
+      );
+    }
+  }, [pagination.pageIndex, pagination.pageSize]);
 
   const handleChangeBelong = (event: any) => {
     setBelong(event.target.value);
@@ -410,7 +406,7 @@ export default function Attendance() {
     const value = event.target.value;
 
     setDepartment(value);
-    getTableData(getBody(selectedName, startDate, endDate));
+    getTableData(getBody(selectedName, startDate, endDate, 0, pagination.pageSize));
     // if (value === '') {
     //   setSelectedName(null);
     // } else {
@@ -437,19 +433,23 @@ export default function Attendance() {
     startDate: string;
     endDate: string;
   }
-  interface Classes {
+  interface Datas {
     data: any[];
+    totalCount: number;
   }
 
   const getTableData = async (body: any) => {
-    const res = await getAuthUser();
+    const res = await getAuthUser({
+      id: '01044455107',
+      password: '0',
+      deviceToken: '0',
+    });
 
     setIsLoading(true);
-    setAuthToken(res[0].token);
+    setAuthToken(res.data[0].token);
 
     try {
-      const response: Classes = await postData('/FaceDevice/FaceUserWorkTimeSelect', body);
-      // let array: any[] = response.data;
+      const response: Datas = await postData('/FaceDevice/FaceUserWorkTimeSelect', body);
 
       const nameArray = [
         ...new Map(response.data.map((val: any) => [val.userName, val])).values(),
@@ -459,6 +459,7 @@ export default function Attendance() {
 
       setOriginData(response.data);
       setOptions(nameArray);
+      setRowCount(response.totalCount);
     } catch (error) {
       console.error(error);
     } finally {
@@ -473,13 +474,13 @@ export default function Attendance() {
   const onClickRemoveMember = () => {
     if (confirm(`${Object.keys(rowSelection).length}명의 데이터를 삭제하시겠습니까?`)) {
       alert('삭제가 완료되었습니다.');
-      getTableData(getBody(selectedName, startDate, endDate));
+      getTableData(getBody(selectedName, startDate, endDate, 0, pagination.pageSize));
       setRowSelection({});
     }
   };
 
   const onChangeInputName = (value: string) => {
-    const body = getBody(value ?? '', startDate, endDate);
+    const body = getBody(value ?? '', startDate, endDate, 0, pagination.pageSize);
 
     if (value === '') {
       setSelectedName('');
@@ -671,9 +672,12 @@ export default function Attendance() {
               overflow: 'auto',
             },
           }}
+          rowCount={rowCount}
           getRowId={(row: any) => row.id} //give each row a more useful id
           onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-          state={{ rowSelection, isLoading: isLoading }} //pass our managed row selection state to the table to use
+          onPaginationChange={setPagination}
+          state={{ rowSelection, isLoading: isLoading, pagination }} //pass our managed row selection state to the table to use
+          manualPagination={true}
           muiTableHeadCellProps={{
             sx: {
               backgroundColor: '#F2F3F6',

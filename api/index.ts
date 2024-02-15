@@ -90,14 +90,10 @@ export const deleteData = async <T>(
 };
 
 // 임시 토큰 발행 api
-export const getAuthUser = async () => {
+export const getAuthUser = async (body: any) => {
   try {
-    const response: any = await postData('/Account/login', {
-      id: '01044455107',
-      password: '0',
-      deviceToken: '0',
-    });
-    return response.data;
+    const response: any = await postData('/Account/login', body);
+    return response;
   } catch (error) {
     throw new Error(error.message);
   }

@@ -13,35 +13,43 @@ export default function Login() {
   const router = useRouter();
 
   const [isError, setIsError] = useState({
-    email: false,
+    phoneNumber: false,
     password: false,
   });
 
   const handleSubmit = async (event) => {
-    setIsError({ email: false, password: false });
+    setIsError({ phoneNumber: false, password: false });
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
+      phoneNumber: data.get('phoneNumber'),
       password: data.get('password'),
     });
-    if (data.get('email').length < 12) {
-      console.log(isError);
-      setIsError({ email: true, password: isError.password });
-    }
-    if (data.get('password').length === 0) {
-      console.log(isError);
-      setIsError({ email: isError.email, password: true });
-    }
+    // if (data.get('phoneNumber').length < 12) {
+    //   console.log(isError);
+    //   setIsError({ phoneNumber: true, password: isError.password });
+    // }
+    // if (data.get('password').length === 0) {
+    //   console.log(isError);
+    //   setIsError({ phoneNumber: isError.phoneNumber, password: true });
+    // }
 
-    if (data.get('email').length >= 12 && data.get('password').length !== 0) {
-      const response = await getAuthUser();
+    // if (data.get('phoneNumber').length >= 12 && data.get('password').length !== 0) {
+    const response = await getAuthUser({
+      id: data.get('phoneNumber'),
+      password: data.get('password'),
+      deviceToken: '0',
+    });
 
-      localStorage.setItem('authUser', JSON.stringify(response[0]));
-      setAuthToken(response[0].token);
+    if (response.result === 0) {
+      localStorage.setItem('authUser', JSON.stringify(response.data[0]));
+      setAuthToken(response.data[0].token);
       router.push('/attendance');
+    } else if (response.result === -1) {
+      alert(response.error_message);
     }
+    // }
   };
 
   const onClickPrivacy = () => {
@@ -68,13 +76,13 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="email"
+              id="phoneNumber"
               label="아이디"
-              name="email"
-              // autoComplete="email"
+              name="phoneNumber"
+              // autoComplete="phoneNumber"
               autoFocus
-              error={isError.email}
-              helperText={isError.email && '아이디를 확인 해 주세요'}
+              error={isError.phoneNumber}
+              helperText={isError.phoneNumber && '아이디를 확인 해 주세요'}
             />
             <TextField
               margin="normal"
