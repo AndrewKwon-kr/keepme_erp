@@ -4,6 +4,8 @@ import PlusIcon from 'public/icons/ico_more_line.svg';
 import Image from 'next/image';
 
 import Link from 'next/link';
+import { KakaoMap } from '../../components/common/KakaoMap';
+import { Weather } from '../../components/common/Wheather';
 
 export default function Home() {
   const statusList = [
@@ -32,7 +34,9 @@ export default function Home() {
             <div className="mt-[30px] grid grid-cols-2 text-base"></div>
           </div>
           <div className="grow border rounded-md shadow-box p-5 flex flex-col">
-            <div className="flex items-center justify-between">
+            <div className="mb-5 flex items-center text-[#555555] text-base">지도</div>
+            <KakaoMap latitude={35.179560914682995} longitude={129.078531730862}></KakaoMap>
+            {/* <div className="flex items-center justify-between">
               <p className="text-[#555555] text-base">근태 현황</p>
               <Link href="/attendance/attendance-status">
                 <div className="flex items-center text-xs text-[#999999]">
@@ -53,13 +57,21 @@ export default function Home() {
                   <p className="font-semibold text-[#3E56B4]">{status.number}</p>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
-          <div className="grow border rounded-md shadow-box p-5 flex flex-col">
+          {/* <div className="grow border rounded-md shadow-box p-5 flex flex-col">
             <div className="flex items-center justify-between">
               <p className="text-[#555555] text-base">날씨</p>
             </div>
-          </div>
+          </div> */}
+        </div>
+        <div className="grow border rounded-md shadow-box p-5 flex flex-col">
+          {/* <div className="mb-5 flex items-center text-[#555555] text-base">지도</div>
+          <KakaoMap latitude={35.179560914682995} longitude={129.078531730862}></KakaoMap> */}
+        </div>
+        <div className="border rounded-md shadow-box p-5 flex flex-col">
+          {/* <div className="mb-5 flex items-center text-[#555555] text-base">날씨</div> */}
+          <Weather></Weather>
         </div>
       </main>
     </Page>

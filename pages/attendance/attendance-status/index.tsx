@@ -81,10 +81,10 @@ export default function Attendance() {
   const user = useAtomValue(userAtom);
 
   const headers = [
-    {
-      label: 'ID',
-      key: 'userID',
-    },
+    // {
+    //   label: 'ID',
+    //   key: 'userID',
+    // },
     {
       label: '일시',
       key: 'workDate',
@@ -133,17 +133,17 @@ export default function Attendance() {
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
-      {
-        accessorKey: 'userId',
-        header: 'ID',
-        size: 20,
-        muiTableHeadCellProps: {
-          align: 'center',
-        },
-        muiTableBodyCellProps: {
-          align: 'center',
-        },
-      },
+      // {
+      //   accessorKey: 'userId',
+      //   header: 'ID',
+      //   size: 20,
+      //   muiTableHeadCellProps: {
+      //     align: 'center',
+      //   },
+      //   muiTableBodyCellProps: {
+      //     align: 'center',
+      //   },
+      // },
       {
         accessorKey: 'workDate',
         header: '일시',

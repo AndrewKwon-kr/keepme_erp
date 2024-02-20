@@ -40,7 +40,6 @@ export const getData = async <T>(
   config?: AxiosRequestConfig,
 ): Promise<APIResponse<T>> => {
   try {
-    setAuthToken(token);
     const response = await client.get<APIResponse<T>>(url, config);
     return response.data;
   } catch (error) {
