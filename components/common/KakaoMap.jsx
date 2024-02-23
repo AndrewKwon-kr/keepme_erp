@@ -28,9 +28,9 @@ export function KakaoMap(probs) {
               title: worker.name,
               latlng: new kakao.maps.LatLng(worker.latitude, worker.longitude),
               content: `
-                <div style="text-align: center; width: 180px; font-size: 14px;">
+                <div style="text-align: center; width: 180px; font-size: 14px; padding: 4px;">
                   <div>${worker.agencyname} - ${worker.departmentName}</div>
-                  <div>${worker.name}</div>
+                  <div style="font-size: 14px; font-weight: bold;">${worker.name}</div>
                   <div style="font-size: 12px; color: gray;">${now.format(
                     'YYYY-MM-DD HH:mm:ss',
                   )}</div>
