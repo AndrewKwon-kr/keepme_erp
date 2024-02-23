@@ -10,7 +10,7 @@ const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiMDEwNDQ0NTUxMDciLCJleHAiOjE3MDYxNTY5ODEsImlzcyI6Imh0dHBzOi8vYXBpLmluY29udXMua3IiLCJhdWQiOiJNeSBrZWVwbWUgVXNlcnMifQ.-uPrzhUga7C_ydoODeFxWj4cVkPEtdyRpkR_FN-aNTU';
 // axios 인스턴스 생성
 const client: Axios = axios.create({
-  baseURL: 'https://test.inconus.kr/api',
+  baseURL: 'https://api.inconus.kr/api',
   headers: {
     'Content-Type': 'application/json',
     // Authorization: `Bearer ${token}`,
@@ -102,6 +102,16 @@ export const getAuthUser = async (body: any) => {
 export const getDeptList = async (body: any) => {
   try {
     const { data }: any = await postData('/User/DeptList', body);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+//근로자 바이탈 리스트
+export const getUserVitalSignList = async (body: any) => {
+  try {
+    const { data }: any = await postData('/UserVitalSign/UserVitalSignList', body);
     return data;
   } catch (error) {
     throw new Error(error.message);

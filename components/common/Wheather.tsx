@@ -320,24 +320,24 @@ export const Weather = () => {
   };
 
   useEffect(() => {
-    const getWheatherData = async () => {
-      try {
-        const res = await getData(GET_WEATHER_WARNING);
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getWheatherData();
-    // axios
-    //   .get(GET_WEATHER_WARNING)
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       var { data } = res;
-    //       setWeatherWarning({ warning: data.data.warning, level: data.data.level });
-    //     }
-    //   })
-    //   .catch((err) => console.log(err));
+    // const getWheatherData = async () => {
+    //   try {
+    //     const res = await getData(GET_WEATHER_WARNING);
+    //     console.log(res);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+    // getWheatherData();
+    axios
+      .get(GET_WEATHER_WARNING)
+      .then((res) => {
+        if (res.status === 200) {
+          var { data } = res;
+          setWeatherWarning({ warning: data.data.warning, level: data.data.level });
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -388,6 +388,7 @@ export const Weather = () => {
                   alt="copyright-logo"
                   width={100}
                   height={40}
+                  style={{ height: '40px' }}
                 />
                 <p>
                   본 저작물은 기상청에서 공공누리 제1유형으로 개방한 기상특보현황조회을
@@ -410,14 +411,7 @@ export const Weather = () => {
               </Col> */}
               {weatherWarning.warning !== '' && (
                 <Col sm="12">
-                  <div
-                    className="bg-primary bg-gradient bg-opacity-10 p-1 text-center"
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      fontSize: '1.1rem',
-                    }}>
+                  <div className="bg-primary bg-gradient bg-opacity-10 p-1 text-center flex items-center content-center text-sm">
                     <Image
                       src={'https://www.weather.go.kr/w/resources/image/renew/ic_sym_01.png'}
                       alt="waring-icon"
