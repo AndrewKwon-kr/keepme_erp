@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
 export function KakaoMap(probs) {
+  const now = moment();
+  console.log(now);
   useEffect(() => {}, []);
 
   useEffect(() => {
@@ -28,17 +30,17 @@ export function KakaoMap(probs) {
               title: worker.name,
               latlng: new kakao.maps.LatLng(worker.latitude, worker.longitude),
               content: `
-              <div style="text-align: center; width: 200px; font-size: 14px;">
-                <div>${worker.agencyname} - ${worker.departmentName}</div>
-                <div>${worker.name}</div>
-                <div style="font-size: 12px; color: gray;">${moment(
-                  worker.registerDateHeart,
-                ).format('YYYY-MM-DD hh:mm:ss')}</div>
-                <div>${worker.state}&nbsp;&nbsp;${worker.temperature}°C&nbsp;&nbsp;${
-                  worker.heartbeat
-                }회</div>
-              </div>
-              `,
+                <div style="text-align: center; width: 180px; font-size: 14px;">
+                  <div>${worker.agencyname} - ${worker.departmentName}</div>
+                  <div>${worker.name}</div>
+                  <div style="font-size: 12px; color: gray;">${now.format(
+                    'YYYY-MM-DD HH:mm:ss',
+                  )}</div>
+                  <div>${worker.state}&nbsp;&nbsp;${worker.temperature}°C&nbsp;&nbsp;${
+                    worker.heartbeat
+                  }회</div>
+                </div>
+                `,
             };
           });
 
