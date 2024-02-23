@@ -3,8 +3,6 @@ import moment from 'moment';
 
 export function KakaoMap(probs) {
   const now = moment();
-  console.log(now);
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const script = document.createElement('script');
