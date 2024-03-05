@@ -217,18 +217,18 @@ export default function Page({ children }: any) {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}>
                     <div className="flex items-center gap-x-2.5">
-                      {/* {user.imageUrl ? (
+                      {user.picture ? (
                         <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
-                          <img src={user.imageUrl} alt="프로필이미지" />
+                          <img src={user.picture} alt="프로필이미지" />
                         </div>
                       ) : (
                         <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
                           {user.name?.substring(0, 1)}
                         </div>
-                      )} */}
-                      <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
+                      )}
+                      {/* <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
                         {user && user.name?.substring(0, 1)}
-                      </div>
+                      </div> */}
                       <div className="text-base">{user?.name}</div>
                     </div>
                   </Button>
