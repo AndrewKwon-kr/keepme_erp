@@ -140,9 +140,9 @@ export default function Attendance() {
 
   return (
     <Page>
-      <div className="px-5 pt-9 pb-20 w-full h-[calc(100vh_-_148px)] grid grid-cols-3 grid-rows-2 gap-5">
-        <div className="col-span-2 flex gap-x-5">
-          <div className="grow border rounded-md shadow-box p-5 flex flex-col">
+      <div className="px-5 pt-9 pb-20 w-full h-[calc(100vh_-_148px)] grid lg:grid-cols-3 lg:grid-rows-2 max-lg:grid-cols-1 gap-5 overflow-y-scroll">
+        <div className="lg:col-span-2 max-lg:col-span-1 flex max-lg:flex-col gap-x-5 ">
+          <div className="grow border rounded-md shadow-box p-5 flex flex-col overflow-auto">
             <div className="flex items-center justify-between">
               <p className="text-[#555555] text-base">근태 현황</p>
               <Link href="/attendance/attendance-status">
@@ -177,7 +177,7 @@ export default function Attendance() {
             </div>
           </div>
         </div>
-        <div className="border rounded-md shadow-box p-5 flex flex-col overflow-auto">
+        <div className="border rounded-md shadow-box p-5 flex flex-col lg:overflow-auto">
           <p className="text-base text-[#555555]">부서 별 연차소진 현황</p>
           <table className="mt-[30px] border">
             <thead>

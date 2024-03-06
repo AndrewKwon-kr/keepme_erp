@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import { getData } from 'api';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 // import { GET_WEATHER_WARNING } from '@/src/constants/ApiUri';
 // import { Popover } from 'devextreme-react';
 
@@ -104,7 +104,7 @@ export const Weather = () => {
   ]); //latitude 위도 longitude 경도
 
   const [customActiveTab, setcustomActiveTab] = useState<string>('1');
-  const [dong, setDong] = useState<string>('연산동');
+  const [dong, setDong] = useState<string>('부산광역시 연제구 연산동');
   const [temperature, setTemperature] = useState<string>('');
   const [windSpeed, setWindSpeed] = useState<string>('');
   const [icon, setIcon] = useState<string>('unknown');
@@ -329,26 +329,32 @@ export const Weather = () => {
     //   }
     // };
     // getWheatherData();
-    axios
-      .get(GET_WEATHER_WARNING)
-      .then((res) => {
-        if (res.status === 200) {
-          var { data } = res;
-          setWeatherWarning({ warning: data.data.warning, level: data.data.level });
-        }
-      })
-      .catch((err) => console.log(err));
+    // axios
+    //   .get(GET_WEATHER_WARNING)
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       var { data } = res;
+    //       setWeatherWarning({ warning: data.data.warning, level: data.data.level });
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
   }, []);
 
   return (
-    <WeatherCard>
+    <div>
       <CardBody>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="flex items-top" id="weather-card-title">
-            <h4 className="card-title">현장 날씨</h4>
-            <h6 className="text-gray-500">( {hours}시 기준 )</h6>
-            <h4 className="card-title">&nbsp;- {dong}</h4>
+          <div className="flex flex-col">
+            <div className="flex items-start" id="weather-card-title">
+              <h4 className="card-title">현장 날씨</h4>
+              <h6 className="text-gray-500">( {hours}시 기준 )</h6>
+            </div>
+            <div className="mt-2 flex items-center">
+              <PlaceOutlinedIcon className="mr-2 text-blue-700" />
+              <div className="mt-0.5 text-blue-700">{dong}</div>
+            </div>
           </div>
+
           <div className="text-center" id="weather-card-info">
             <h6>* 날씨는 1일 8회 업데이트 됩니다</h6>
             <Typography
@@ -449,7 +455,7 @@ export const Weather = () => {
                 </p>
               </NowWeatherContent>
             </NowWeather>
-            <div className="flex items-center justify-between mt-5" id="weahter-more">
+            <div className="flex items-center justify-between mt-5 max-sm:hidden" id="weahter-more">
               {/* Houly data Render */}
               {hourlyData.map((data, key) => (
                 <div className="mx-2 mt-2 flex flex-col items-center" key={key}>
@@ -466,10 +472,46 @@ export const Weather = () => {
                 </div>
               ))}
             </div>
+            <div className="flex flex-col  mt-5 sm:hidden md:hidden lg:hidden" id="weahter-more">
+              {/* Houly data Render */}
+              <div className="flex justify-between">
+                {hourlyData.slice(0, 3).map((data, key) => (
+                  <div className="mx-2 mt-2 flex flex-col items-center" key={key}>
+                    <p className="text-bold text-gray-500">
+                      {hours === data.hour.toString() ? '지금' : data.hour + '시'}
+                    </p>
+                    <div className="mb-1">
+                      <WeatherIcon iconCode={data.icon} size={40} />
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                      <div className="fs-6 fw-bold">{data.t1h}°C</div>
+                      <div className="fs-6 fw-bold">{data.wsd}m/s</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <br />
+              <div className="flex justify-between">
+                {hourlyData.slice(3).map((data, key) => (
+                  <div className="mx-2 mt-2 flex flex-col items-center" key={key}>
+                    <p className="text-bold text-gray-500">
+                      {hours === data.hour.toString() ? '지금' : data.hour + '시'}
+                    </p>
+                    <div className="mb-1">
+                      <WeatherIcon iconCode={data.icon} size={40} />
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                      <div className="fs-6 fw-bold">{data.t1h}°C</div>
+                      <div className="fs-6 fw-bold">{data.wsd}m/s</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </Col>
         </Row>
       </CardBody>
-    </WeatherCard>
+    </div>
   );
 };
 

@@ -12,7 +12,8 @@ export default function Building() {
   return (
     <Page>
       <main className="min-h-screen w-full relative">
-        <TransformWrapper initialScale={1} minScale={1} maxScale={10}>
+        Building
+        {/* <TransformWrapper initialScale={1} minScale={1} maxScale={10}>
           {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
             <TransformComponent>
               <Button
@@ -39,7 +40,7 @@ export default function Building() {
               <Image src={Map} alt="bg" />
             </TransformComponent>
           )}
-        </TransformWrapper>
+        </TransformWrapper> */}
       </main>
     </Page>
   );

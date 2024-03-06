@@ -164,7 +164,7 @@ export default function Page({ children }: any) {
         </Head>
         <div
           className={
-            'pt-[90px] px-5 min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5 transition ease-in-out delay-150 duration-300' +
+            'pt-[90px] px-5 lg:min-w-[250px] min-h-screen flex flex-col bg-[#F2F3F6] gap-y-2.5 transition ease-in-out delay-150 duration-300' +
             (isNone ? ' hidden' : isHidden && ' opacity-0 -translate-x-full')
           }>
           {menus.map((menu) => (
@@ -177,12 +177,16 @@ export default function Page({ children }: any) {
                     : ' bg-[#F2F3F6] text-[#555555]')
                 }>
                 {setIcon(menu.icon)}
-                <div>{menu.name}</div>
+                <div className="max-md:hidden">{menu.name}</div>
               </div>
             </Link>
           ))}
         </div>
-        <div className="min-w-[calc(100%_-_250px)] max-w-[1380px] flex flex-col">
+        <div
+          className={
+            'flex flex-col h-screen overflow-y-auto' +
+            (isHidden ? ' w-full' : ' min-w-[calc(100%_-_250px)] max-w-[1380px]')
+          }>
           <div className="flex flex-col px-5">
             <div className="flex items-center mt-5 mr-5">
               <div className="mr-auto">
@@ -217,14 +221,18 @@ export default function Page({ children }: any) {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}>
                     <div className="flex items-center gap-x-2.5">
-                      {user.picture ? (
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
-                          <img src={user.picture} alt="프로필이미지" />
-                        </div>
+                      {user ? (
+                        user.picture ? (
+                          <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden">
+                            <img src={user.picture} alt="프로필이미지" />
+                          </div>
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
+                            {user.name?.substring(0, 1)}
+                          </div>
+                        )
                       ) : (
-                        <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
-                          {user.name?.substring(0, 1)}
-                        </div>
+                        <></>
                       )}
                       {/* <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center text-white">
                         {user && user.name?.substring(0, 1)}
@@ -246,11 +254,13 @@ export default function Page({ children }: any) {
                 </div>
               </div>
             </div>
-            <div className="mt-11 flex items-center">
-              <div className="text-xl font-semibold">{realTime}</div>
-              <div className="ml-auto text-base">
-                전체 등록 인원 : <b>1240</b>
+            <div className="mt-11 flex items-center justify-between">
+              <div className="lg:text-xl md:text-lg max-md:text-base  font-semibold">
+                {realTime}
               </div>
+              {/* <div className="ml-auto text-base">
+                전체 등록 인원 : <b>1240</b>
+              </div> */}
               <FormControl>
                 <Select
                   className="ml-5 h-9 w-[180px] active:outline-none"

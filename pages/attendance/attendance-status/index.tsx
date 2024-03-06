@@ -361,6 +361,8 @@ export default function Attendance() {
       endDate: endDate.format('YYYYMMDD'),
       pageIndex: pageIndex + 1,
       rowPerPage,
+      companyCode: user.companyCode,
+      agencyCode: user.agencyCode,
     };
   };
 
@@ -406,6 +408,7 @@ export default function Attendance() {
     const value = event.target.value;
 
     setDepartment(value);
+    console.log(value);
     getTableData(getBody(selectedName, startDate, endDate, 0, pagination.pageSize));
     // if (value === '') {
     //   setSelectedName(null);
