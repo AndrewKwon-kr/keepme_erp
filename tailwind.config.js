@@ -11,14 +11,18 @@ module.exports = {
         pretendard: ['Pretendard'],
       },
       boxShadow: {
-        box: '0px 1px 4px #00000029;',
+        box: '0px 1px 6px #0000001A;',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      colors: {
+        'navy': '#171C61',
+        'danger': '#F26363',
+        'grey': '#787878'
+      }
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
 };

@@ -16,9 +16,9 @@ type WarningData = {
   level: string;
 };
 
-const GET_WEATHER_WARNING = 'https://inconus.co.kr/api/weather';
-const WEATHER_API_URL = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0';
-const WEATHER_SERVICE_KEY =
+export const GET_WEATHER_WARNING = 'https://inconus.co.kr/api/weather';
+export const WEATHER_API_URL = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0';
+export const WEATHER_SERVICE_KEY =
   '7IVauFN%2B1DkYSw0itmlCRa2wj0t3SbBm0FZN14GvvrCxwv9jzO%2BTJ4cd3B75ejI9dipEbaRDb0e5Avw0kTt9Mg%3D%3D';
 
 const WeatherIcon = ({ iconCode, size }: { iconCode: string; size: number }) => {
@@ -29,10 +29,11 @@ const WeatherIcon = ({ iconCode, size }: { iconCode: string; size: number }) => 
       <Image
         loader={({ src }) => `${src}`}
         src={iconSrc}
-        alt={iconCode}
+        alt="날씨"
         width={size}
         height={size}
         unoptimized={true}
+        priority={true}
       />
     </div>
   );
@@ -104,7 +105,7 @@ export const Weather = () => {
   ]); //latitude 위도 longitude 경도
 
   const [customActiveTab, setcustomActiveTab] = useState<string>('1');
-  const [dong, setDong] = useState<string>('부산광역시 연제구 연산동');
+  const [dong, setDong] = useState<string>('연산동');
   const [temperature, setTemperature] = useState<string>('');
   const [windSpeed, setWindSpeed] = useState<string>('');
   const [icon, setIcon] = useState<string>('unknown');
@@ -308,7 +309,7 @@ export const Weather = () => {
         };
         array.push(object);
       }
-      //  console.log("array:", array)
+      // console.log('array:', array);
       setHourlyData(array); //현재 ~ 현재 +6 시간 데이터 저장
     }
   }, [hourlyWeatherData, fcstTime, getForecastTime]);
@@ -342,7 +343,18 @@ export const Weather = () => {
 
   return (
     <div>
-      <CardBody>
+      <div className="flex items-center max-lg:text-sm">
+        <div>{dong}</div>
+        <div className="mx-1">
+          <WeatherIcon iconCode={hourlyData[0]?.icon} size={40} />
+        </div>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <div className="fs-6 fw-bold">{hourlyData[0]?.t1h}°C</div>
+          {/* <div className="fs-6 fw-bold">{hourlyData[0]?.wsd}m/s</div> */}
+        </div>
+        <div className="ml-1">{description}</div>
+      </div>
+      {/* <CardBody>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="flex flex-col">
             <div className="flex items-start" id="weather-card-title">
@@ -407,14 +419,6 @@ export const Weather = () => {
         <Row className="mx-2 my-1" id="weather-card-content">
           <Col sm="12">
             <Row>
-              {/* <Col sm='6'>
-                <h5
-                  className='inline-block fw-semibold'
-                  style={{ fontWeight: 600 }}
-                >
-                  {dong}
-                </h5>
-              </Col> */}
               {weatherWarning.warning !== '' && (
                 <Col sm="12">
                   <div className="bg-primary bg-gradient bg-opacity-10 p-1 text-center flex items-center content-center text-sm">
@@ -456,7 +460,6 @@ export const Weather = () => {
               </NowWeatherContent>
             </NowWeather>
             <div className="flex items-center justify-between mt-5 max-sm:hidden" id="weahter-more">
-              {/* Houly data Render */}
               {hourlyData.map((data, key) => (
                 <div className="mx-2 mt-2 flex flex-col items-center" key={key}>
                   <p className="text-bold text-gray-500">
@@ -473,7 +476,6 @@ export const Weather = () => {
               ))}
             </div>
             <div className="flex flex-col  mt-5 sm:hidden md:hidden lg:hidden" id="weahter-more">
-              {/* Houly data Render */}
               <div className="flex justify-between">
                 {hourlyData.slice(0, 3).map((data, key) => (
                   <div className="mx-2 mt-2 flex flex-col items-center" key={key}>
@@ -510,7 +512,7 @@ export const Weather = () => {
             </div>
           </Col>
         </Row>
-      </CardBody>
+      </CardBody> */}
     </div>
   );
 };

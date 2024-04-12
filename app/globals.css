@@ -43,16 +43,16 @@ body {
   --color-background: rgb(100 116 139);
 }
 
-*{
+* {
   box-sizing: border-box;
 }
 /* 버튼과 바디 등 필요한 변수들을 설정해줌으로써 값 지정해주기  */
-button{
+button {
   background-color: var(--color-background);
   color: var(--color-primary);
 }
 
-body{
+body {
   width: 100vw;
   height: 100vh;
   margin: 0;

@@ -3,6 +3,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     loader: 'default',
     minimumCacheTTL: 60,
