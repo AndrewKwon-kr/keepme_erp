@@ -19,25 +19,12 @@ export default function ReportTable({
   setPrevComment,
   currComment,
   setCurrComment,
+  totalList,
 }: any) {
   const [enableEdit, setEnableEdit] = useState(false);
   const [saveData, setSaveData] = useState([]);
   const [isSelectModalToggle, setIsSelectModalToggle] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-
-  const totalList = [
-    { label: '형틀목공', count: 10 },
-    { label: '연수생', count: 10 },
-    { label: '철근', count: 10 },
-    { label: '비계', count: 10 },
-    { label: '직원', count: 10 },
-    { label: '일반', count: 10 },
-    { label: '해체', count: 10 },
-    { label: '정리', count: 10 },
-    { label: '직영', count: 10 },
-    { label: '건축', count: 10 },
-    { label: '콘크리트', count: 10 },
-  ];
 
   const onSave = async () => {
     if (window.confirm('저장하시겠습니까?')) {
@@ -109,7 +96,9 @@ export default function ReportTable({
             onChange={(e) => setManager(e.target.value)}
             className="border-0 ring-0 focus:ring-0 w-4/5"
           /> */}
-          {manager.map((worker: any) => `${worker?.name} ${worker?.positionName}`).join(', ')}
+          {manager
+            .map((worker: any) => `${worker?.employeeName} ${worker?.positionName}`)
+            .join(', ')}
           <div
             className="absolute right-5 w-12 h-6 rounded-2xl bg-black text-white text-xs flex items-center justify-center cursor-pointer"
             onClick={() => onClickEdit('본사담당')}>
@@ -128,7 +117,9 @@ export default function ReportTable({
             onChange={(e) => setWorker(e.target.value)}
             className="border-0 ring-0 focus:ring-0 w-4/5"
           /> */}
-          {workers.map((worker: any) => `${worker?.name} ${worker?.positionName}`).join(', ')}
+          {workers
+            .map((worker: any) => `${worker?.employeeName} ${worker?.positionName}`)
+            .join(', ')}
           <div
             className="absolute right-5 w-12 h-6 rounded-2xl bg-black text-white text-xs flex items-center justify-center cursor-pointer"
             onClick={() => onClickEdit('직원')}>
@@ -143,15 +134,22 @@ export default function ReportTable({
             <th className="min-w-[60px] font-medium">No.</th>
             <th className="min-w-[140px] font-medium">직종</th>
             <th className="min-w-[140px] font-medium">작업팀</th>
-            <th className="w-[300px] border-0 p-0 grid grid-rows-2 h-full divide-y divide-[#DCDCDC] font-medium">
-              <div className="h-[30px] flex items-center justify-center">인원</div>
-              <div className="h-[30px] grid grid-cols-4 divide-x divide-[#DCDCDC] items-center justify-center">
+            <th className="w-[200px] border-0 p-0 grid grid-rows-2 h-full divide-y divide-[#DCDCDC] font-medium">
+              <div className="h-[30px] flex items-center justify-center">오늘</div>
+              <div className="h-[30px] grid grid-cols-2 divide-x divide-[#DCDCDC] items-center justify-center">
+                <div className="h-[30px] flex items-center justify-center">출력</div>
                 <div className="h-[30px] flex items-center justify-center">조출</div>
-                <div className="h-[30px] flex items-center justify-center">일계</div>
-                <div className="h-[30px] flex items-center justify-center">전야</div>
-                <div className="h-[30px] flex items-center justify-center">월누계</div>
               </div>
             </th>
+            {/* <th className="w-[300px] border-0 p-0 grid grid-rows-2 h-full divide-y divide-[#DCDCDC] font-medium">
+              <div className="h-[30px] flex items-center justify-center">전일</div>
+              <div className="h-[30px] flex items-center justify-center">출력</div>
+            </th> */}
+            <th className="min-w-[100px] font-medium border-0 p-0 divide-y divide-[#DCDCDC]">
+              <div className="h-[30px]  flex items-center justify-center">전일</div>
+              <div className="h-[30px] flex items-center justify-center">출력</div>
+            </th>
+            <th className="min-w-[100px] font-medium">월누계</th>
             <th className="w-[calc(100vw_-_640px)] font-medium relative">
               <div className={'font-semibold ' + (enableEdit && ' animate-bounce')}>작업내용</div>
               {enableEdit ? (
@@ -186,14 +184,18 @@ export default function ReportTable({
               key={index}
               className="divide-x border-b box-content h-[30px] text-center items-center">
               <td>{row.no}</td>
-              <td>{row.departmentName}</td>
+              <td>{row.deptName}</td>
               <td>{row.teamName}</td>
-              <td className="p-0 h-[30px] grid grid-cols-4 divide-x divide-[#DCDCDC] items-center justify-center">
+              <td className="p-0 h-[30px] grid grid-cols-2 divide-x divide-[#DCDCDC] items-center justify-center">
                 <div className="h-[30px] flex items-center justify-center">{row.numberOfDays}</div>
-                <div className="h-[30px] flex items-center justify-center">{row.numberOfDays}</div>
-                <div className="h-[30px] flex items-center justify-center">{row.numberOfEve}</div>
-                <div className="h-[30px] flex items-center justify-center">{row.numberOfMonth}</div>
+                <div className="h-[30px] flex items-center justify-center">
+                  {row.numberOfEarlyWork}
+                </div>
+                {/* <div className="h-[30px] flex items-center justify-center">{row.numberOfEve}</div>
+                <div className="h-[30px] flex items-center justify-center">{row.numberOfMonth}</div> */}
               </td>
+              <td>{row.numberOfPrev}</td>
+              <td>{row.numberOfMonth}</td>
               <td className="text-start px-2">
                 <input
                   type="text"
@@ -217,7 +219,7 @@ export default function ReportTable({
         <div className="min-w-[341px] border-r border-[#DCDCDC] flex items-center justify-center font-semibold">
           합계
         </div>
-        <div className="w-[300px] grid grid-cols-4 items-center justify-center font-semibold">
+        <div className="w-[200px] grid grid-cols-2 items-center justify-center font-semibold">
           <div className="h-10 flex items-center justify-center border-r border-[#DCDCDC]">
             {data
               .map((row: any) => row.numberOfDays)
@@ -225,12 +227,24 @@ export default function ReportTable({
           </div>
           <div className="h-10 flex items-center justify-center border-r border-[#DCDCDC]">
             {data
-              .map((row: any) => row.numberOfDays)
+              .map((row: any) => row.numberOfEarlyWork)
+              .reduce((prev: any, curr: any) => prev + curr, 0)}
+          </div>
+          {/* <div className="h-10 flex items-center justify-center border-r border-[#DCDCDC]">
+            {data
+              .map((row: any) => row.numberOfPrev)
               .reduce((prev: any, curr: any) => prev + curr, 0)}
           </div>
           <div className="h-10 flex items-center justify-center border-r border-[#DCDCDC]">
             {data
-              .map((row: any) => row.numberOfEve)
+              .map((row: any) => row.numberOfMonth)
+              .reduce((prev: any, curr: any) => prev + curr, 0)}
+          </div> */}
+        </div>
+        <div className="w-[200px] grid grid-cols-2 items-center justify-center font-semibold">
+          <div className="h-10 flex items-center justify-center border-r border-[#DCDCDC]">
+            {data
+              .map((row: any) => row.numberOfPrev)
               .reduce((prev: any, curr: any) => prev + curr, 0)}
           </div>
           <div className="h-10 flex items-center justify-center border-r border-[#DCDCDC]">
@@ -244,10 +258,10 @@ export default function ReportTable({
       <div className="mt-5 flex items-center border-[#DCDCDC] border bg-white ">
         <div className="min-w-[341px] flex items-center justify-center font-semibold">인원집계</div>
         <div className="w-full grid grid-cols-4">
-          {totalList.map((total, index) => (
+          {totalList.map((total: any, index: number) => (
             <div key={index} className="grid grid-cols-2 divide-x h-10 border-[0.5px]">
-              <div className="grow flex px-4 py-2 justify-center">{total.label}</div>
-              <div className="grow flex px-4 py-2 justify-center">{total.count}</div>
+              <div className="grow flex px-4 py-2 justify-center">{total.deptName}</div>
+              <div className="grow flex px-4 py-2 justify-center">{total.deptCnt}</div>
             </div>
           ))}
         </div>

@@ -44,6 +44,7 @@ export default function Status() {
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<any>(moment().subtract(1, 'M'));
   const [endDate, setEndDate] = useState<any>(moment());
+  const [monthDate, setMonthDate] = useState(moment());
   const [dayTableData, setDayTableData] = useState<any>([]);
   const [monthTableData, setMonthTableData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -273,6 +274,11 @@ export default function Status() {
       );
     }
   };
+
+  useEffect(() => {
+    setStartDate(moment(monthDate).startOf('months'));
+    setEndDate(moment(monthDate).endOf('months'));
+  }, [monthDate]);
   return (
     <main className="p-10 w-full overflow-x-auto whitespace-nowrap">
       {/* <WorkerStatusModal open={open} setOpen={setOpen} data={selectedWorker}></WorkerStatusModal> */}
@@ -373,21 +379,35 @@ export default function Status() {
         <div className="text-[#7A7F94] text-base flex items-center">
           <div className="mr-5">조회기간</div>
           <div className="flex items-center">
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-              <DatePicker
-                slotProps={{ textField: { size: 'small' } }}
-                value={startDate}
-                onChange={(newValue) => setStartDate(newValue)}
-                className="bg-white"
-              />
-              &nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;
-              <DatePicker
-                slotProps={{ textField: { size: 'small' } }}
-                value={endDate}
-                onChange={(newValue) => setEndDate(newValue)}
-                className="bg-white"
-              />
-            </LocalizationProvider>
+            {alignment == 'day' && (
+              <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DatePicker
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={startDate}
+                  onChange={(newValue) => setStartDate(newValue)}
+                  className="bg-white"
+                />
+                &nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;
+                <DatePicker
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={endDate}
+                  onChange={(newValue) => setEndDate(newValue)}
+                  className="bg-white"
+                />
+              </LocalizationProvider>
+            )}
+            {alignment == 'month' && (
+              <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DatePicker
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={monthDate}
+                  onChange={(newValue) => setMonthDate(newValue)}
+                  className="bg-white"
+                  openTo="month"
+                  views={['year', 'month']}
+                />
+              </LocalizationProvider>
+            )}
           </div>
         </div>
         <div

@@ -59,7 +59,8 @@ export default function MonthStatusTable({
             return {
               accessorKey: key,
               header: '출퇴근',
-              size: 80,
+              size: 60,
+              maxSize: 60,
               muiTableHeadCellProps: {
                 align: 'center',
               },
@@ -67,17 +68,32 @@ export default function MonthStatusTable({
                 align: 'center',
               },
               Cell: ({ cell }: any) => (
-                <div className="flex flex-col divide-y">
-                  <div className="pb-1.5 text-xs text-gray-500">출근</div>
-                  <div className="pt-1.5 text-xs text-gray-500">퇴근</div>
+                <div className="grid grid-rows-3 divide-y">
+                  <div className="pt-0.5 text-xs text-gray-500">출근</div>
+                  <div className="pt-0.5 text-xs text-gray-500">퇴근</div>
+                  <div className="pt-0.5 text-xs text-gray-500">공수</div>
                 </div>
               ),
+            };
+          case 'earlyWork':
+            return {
+              accessorKey: key,
+              header: '조기출근',
+              size: 60,
+              maxSize: 60,
+              muiTableHeadCellProps: {
+                align: 'center',
+              },
+              muiTableBodyCellProps: {
+                align: 'center',
+              },
             };
           case 'numOfDayWork':
             return {
               accessorKey: key,
               header: '출근일수',
-              size: 80,
+              size: 60,
+              maxSize: 60,
               muiTableHeadCellProps: {
                 align: 'center',
               },
@@ -89,7 +105,8 @@ export default function MonthStatusTable({
             return {
               accessorKey: key,
               header: '연장일수',
-              size: 80,
+              size: 60,
+              maxSize: 60,
               muiTableHeadCellProps: {
                 align: 'center',
               },
@@ -101,7 +118,8 @@ export default function MonthStatusTable({
             return {
               accessorKey: key,
               header: '야간일수',
-              size: 80,
+              size: 60,
+              maxSize: 60,
               muiTableHeadCellProps: {
                 align: 'center',
               },
@@ -126,12 +144,13 @@ export default function MonthStatusTable({
                   {cell.getValue() ? (
                     cell.getValue()?.start != null ? (
                       <>
-                        <div className="pb-1.5 text-xs text-gray-500">{cell.getValue()?.start}</div>
+                        <div className="pb-0.5 text-xs text-gray-500">{cell.getValue()?.start}</div>
                         {cell.getValue()?.end ? (
-                          <div className="pt-1.5 text-xs text-gray-500">{cell.getValue()?.end}</div>
+                          <div className="pt-0.5 text-xs text-gray-500">{cell.getValue()?.end}</div>
                         ) : (
-                          <div className="pt-1.5 text-xs text-[#DE2626]">x</div>
+                          <div className="py-[1px] text-xs text-[#DE2626]">x</div>
                         )}
+                        <div className="pt-0.5 text-xs text-gray-500">{cell.getValue()?.num}</div>
                       </>
                     ) : (
                       <div className="text-[#DE2626] text-xs flex justify-center">휴무</div>
@@ -163,6 +182,7 @@ export default function MonthStatusTable({
       if (index % 2 != 0) {
         const one = originData[index - 1];
         const two = originData[index];
+
         if (one && two) {
           const values1 = Object.values(one);
           const values2 = Object.values(two);
@@ -189,7 +209,7 @@ export default function MonthStatusTable({
                 value[keys[i]] = values[i];
                 break;
               default:
-                value[keys[i]] = { start: values1[i], end: values2[i] };
+                value[keys[i]] = { start: values1[i], end: values2[i], num: 1 };
             }
           }
           return value;
@@ -222,6 +242,7 @@ export default function MonthStatusTable({
           'agency',
           'department',
           'UserName',
+          'earlyWork',
           'numOfDayWork',
           'overTime',
           'nightWork',
@@ -232,6 +253,7 @@ export default function MonthStatusTable({
             'agency',
             'department',
             'UserName',
+            'earlyWork',
             'numOfDayWork',
             'overTime',
             'nightWork',
